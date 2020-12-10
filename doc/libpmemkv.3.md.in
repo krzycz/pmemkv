@@ -190,6 +190,16 @@ See descriptions of these functions for details.
 :	Defragments approximately 'amount_percent' percent of elements in the database
 	starting from 'start_percent' percent of elements.
 
+`int pmemkv_stats(pmemkv_db *db, pmemkv_statistics *statistics);`
+
+:	Retrieves engine statistics and saves them in the 'statistics' structure.
+	If used against libpmemobj-based engines, pmemkv_statistics consists of following parameters:
+		* stats_enabled,
+		* heap_curr_allocated,
+		* heap_run_allocated,
+		* heap_run_active.
+	For more details about above parameters meaning, see https://pmem.io/pmdk/manpages/linux/master/libpmemobj/pmemobj_ctl_get.3
+
 `const char *pmemkv_errormsg(void);`
 
 :	Returns a human readable string describing the last error.
@@ -210,6 +220,7 @@ Each function, except for *pmemkv_close()* and *pmemkv_errormsg()*, returns one 
 + **PMEMKV_STATUS_WRONG_ENGINE_NAME** -- engine name does not match any available engine
 + **PMEMKV_STATUS_TRANSACTION_SCOPE_ERROR** -- an error with the scope of the libpmemobj transaction
 + **PMEMKV_STATUS_DEFRAG_ERROR** -- the defragmentation process failed (possibly in the middle of a run)
++ **PMEMKV_STATUS_STATS_ERROR** -- the statistics retrieval process failed
 
 Status returned from a function can change in a future version of a library to a more specific one.
 For example, if a function returns PMEMKV_STATUS_UNKNOWN_ERROR, it is possible that in future

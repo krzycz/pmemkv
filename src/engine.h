@@ -51,6 +51,7 @@ public:
 	virtual status put(string_view key, string_view value) = 0;
 	virtual status remove(string_view key) = 0;
 	virtual status defrag(double start_percent, double amount_percent);
+	virtual status stats(statistics *stat);
 
 private:
 	static void check_config_null(const std::string &engine_name,

@@ -102,6 +102,8 @@ enum class status {
 	COMPARATOR_MISMATCH =
 		PMEMKV_STATUS_COMPARATOR_MISMATCH, /**< db was created with a different
 						      comparator */
+	STATS_ERROR =
+		PMEMKV_STATUS_STATS_ERROR, /**< failed to retrieve statistics from db */
 };
 
 inline std::ostream &operator<<(std::ostream &os, const status &s)
@@ -125,6 +127,14 @@ inline std::ostream &operator<<(std::ostream &os, const status &s)
 
 	return os;
 }
+
+/*! \union statistics
+	\brief A union for statistics retrieval.
+
+	See [libpmemkv(3)](https://pmem.io/pmemkv/master/manpages/libpmemkv.3.html) for
+	details.
+*/
+using statistics = pmemkv_statistics;
 
 /*! \class config
 	\brief Holds configuration parameters for engines.
@@ -249,6 +259,7 @@ public:
 	status put(string_view key, string_view value) noexcept;
 	status remove(string_view key) noexcept;
 	status defrag(double start_percent = 0, double amount_percent = 100);
+	status stats(statistics *stat) noexcept;
 
 	std::string errormsg();
 
@@ -1289,6 +1300,20 @@ inline status db::defrag(double start_percent, double amount_percent)
 {
 	return static_cast<status>(
 		pmemkv_defrag(this->db_.get(), start_percent, amount_percent));
+}
+
+/**
+ * Retrieves statistics related to the database.
+ *
+ * @param[in] stat a pointer to the structure with appropriate statistics fields
+ *
+ * @return pmem::kv::status
+ */
+inline status db::stats(statistics *stat) noexcept
+
+{
+	return static_cast<status>(
+		pmemkv_stats(this->_db, reinterpret_cast<pmemkv_statistics *>(stat)));
 }
 
 /**

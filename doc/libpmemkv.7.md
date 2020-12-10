@@ -75,6 +75,11 @@ This engine requires the following config parameters (see **libpmemkv_config**(3
 	+ min value: 8388608 (8MB)
 * **oid** -- Pointer to oid (for details see **libpmemobj**(7)) which points to engine data. If oid is null, engine will allocate new data, otherwise it will use existing one.
 	+ type: object
+* **pmemobj_stats_enabled** -- Enables or disables runtime collection of statistics. There are two types of statistics: persistent and transient ones. Persistent statistics survive pool restarts, whereas transient ones don’t. Statistics are not recalculated after enabling; any operations that occur between disabling and re-enabling will not be reflected in subsequent values.
+If pmemobj_stats_enabled is set to 0, only transcient statistics are enabled. If set to 1, both transcient and persistent statistics are enabled. If set to 2, only persistent statistics are enabled. If set to 3, all statistics are disabled. Only transient statistics are enabled by default. Enabling persistent statistics may have non-trivial performance impact.
+Currently available statistics are: stats.heap.curr_allocated, stats.heap.run_allocated, stats.heap.run_active (for details see <https://pmem.io/pmdk/manpages/linux/master/libpmemobj/pmemobj_ctl_get.3>). These statistics are being gathered per persistent memory pool, not by en engine.
+	+ type: uint64_t
+	+ default value: 0
 
 The following table shows three possible combinations of parameters (where '-' means 'cannot be set'):
 

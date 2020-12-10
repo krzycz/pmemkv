@@ -555,6 +555,16 @@ int pmemkv_defrag(pmemkv_db *db, double start_percent, double amount_percent)
 	});
 }
 
+int pmemkv_stats(pmemkv_db *db, pmemkv_statistics *statistics)
+{
+	if (!db)
+		return PMEMKV_STATUS_INVALID_ARGUMENT;
+
+	return catch_and_return_status(__func__, [&] {
+		return db_to_internal(db)->stats(statistics);
+	});
+}
+
 const char *pmemkv_errormsg(void)
 {
 	return out_get_errormsg();

@@ -71,6 +71,31 @@ public:
 			pmpool = pmem::obj::pool_base(pmemobj_pool_by_ptr(oid));
 			root_oid = oid;
 		}
+
+		int64_t stats = 0;
+
+		if (cfg->get_int64("pmemobj_stats_enabled", &stats)) {
+			switch (stats)  {
+				case 0:
+					stats = POBJ_STATS_ENABLED_TRANSIENT;
+					break;
+				case 1:
+					stats = POBJ_STATS_ENABLED_BOTH;
+					break;
+				case 2:
+					stats = POBJ_STATS_ENABLED_PERSISTENT;
+					break;
+				case 3:
+					stats = POBJ_STATS_DISABLED;
+					break;
+				default:
+					throw pmem::kv::internal::invalid_argument(
+						"Unsupported value for \"pmemobj_stats_enabled\" config parameter.");
+			}
+
+			if (0 != pmemobj_ctl_set(pmpool.handle(), "stats.enabled", &stats))
+				throw internal::error("Failed to set \"pmemobj_stats_enabled\".");
+		}
 	}
 
 	~pmemobj_engine_base()
@@ -78,6 +103,36 @@ public:
 		if (cfg_by_path)
 			pmpool.close();
 	}
+
+	virtual status stats(statistics *stat) {
+		int ret = 0;
+
+		ret = pmemobj_ctl_get(pmpool.handle(), "stats.enabled", &stat->stats_enabled);
+		if (ret != 0) {
+			out_err_stream("stats") << "Failed to query \"stats.enabled\".";
+			return status::STATS_ERROR;
+		}
+
+		ret = pmemobj_ctl_get(pmpool.handle(), "stats.heap.curr_allocated", &stat->heap_curr_allocated);
+		if (ret != 0) {
+			out_err_stream("stats") << "Failed to query \"stats.heap.curr_allocated\".";
+			return status::STATS_ERROR;
+		}
+
+		ret = pmemobj_ctl_get(pmpool.handle(), "stats.heap.run_allocated", &stat->heap_run_allocated);
+		if (ret != 0) {
+			out_err_stream("stats") << "Failed to query \"stats.heap.run_allocated\".";
+			return status::STATS_ERROR;
+		}
+
+		ret = pmemobj_ctl_get(pmpool.handle(), "stats.heap.run_active", &stat->heap_run_active);
+		if (ret != 0) {
+			out_err_stream("stats") << "Failed to query \"stats.heap.run_active\".";
+			return status::STATS_ERROR;
+		}
+
+		return status::OK;
+	};
 
 protected:
 	struct Root {

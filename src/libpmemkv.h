@@ -26,10 +26,21 @@ extern "C" {
 #define PMEMKV_STATUS_TRANSACTION_SCOPE_ERROR 10
 #define PMEMKV_STATUS_DEFRAG_ERROR 11
 #define PMEMKV_STATUS_COMPARATOR_MISMATCH 12
+#define PMEMKV_STATUS_STATS_ERROR 13
 
 typedef struct pmemkv_db pmemkv_db;
 typedef struct pmemkv_config pmemkv_config;
 typedef struct pmemkv_comparator pmemkv_comparator;
+
+union pmemkv_statistics{
+	struct { /* Statistics for libpmemobj-based engines */
+		int stats_enabled;
+		uint64_t heap_curr_allocated;
+		uint64_t heap_run_allocated;
+		uint64_t heap_run_active;
+	};
+};
+typedef union pmemkv_statistics pmemkv_statistics;
 
 typedef int pmemkv_get_kv_callback(const char *key, size_t keybytes, const char *value,
 				   size_t valuebytes, void *arg);
@@ -100,6 +111,8 @@ int pmemkv_put(pmemkv_db *db, const char *k, size_t kb, const char *v, size_t vb
 int pmemkv_remove(pmemkv_db *db, const char *k, size_t kb);
 
 int pmemkv_defrag(pmemkv_db *db, double start_percent, double amount_percent);
+
+int pmemkv_stats(pmemkv_db *db, pmemkv_statistics *statistics);
 
 const char *pmemkv_errormsg(void);
 

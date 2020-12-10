@@ -165,6 +165,7 @@ status engine_base::count_below(string_view key, std::size_t &cnt)
 {
 	return status::NOT_SUPPORTED;
 }
+
 status engine_base::count_between(string_view key1, string_view key2, std::size_t &cnt)
 {
 	return status::NOT_SUPPORTED;
@@ -207,6 +208,11 @@ status engine_base::exists(string_view key)
 }
 
 status engine_base::defrag(double start_percent, double amount_percent)
+{
+	return status::NOT_SUPPORTED;
+}
+
+status engine_base::stats(statistics *stat)
 {
 	return status::NOT_SUPPORTED;
 }
