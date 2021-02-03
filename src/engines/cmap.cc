@@ -17,8 +17,12 @@ cmap::cmap(std::unique_ptr<internal::config> cfg) : pmemobj_engine_base(cfg, "pm
 		sizeof(internal::cmap::string_t) == 40,
 		"Wrong size of cmap value and key. This probably means that std::string has size > 32");
 
+	/* try to read reserve count from config, 0 means nothing will be reserved */
+	uint64_t reserve_count = 0;
+	cfg->get_uint64("reserve", &reserve_count);
+
+	Recover(reserve_count);
 	LOG("Started ok");
-	Recover();
 }
 
 cmap::~cmap()
@@ -116,7 +120,7 @@ status cmap::defrag(double start_percent, double amount_percent)
 	return status::OK;
 }
 
-void cmap::Recover()
+void cmap::Recover(size_t reserve_count = 0)
 {
 	if (!OID_IS_NULL(*root_oid)) {
 		container = (pmem::kv::internal::cmap::map_t *)pmemobj_direct(*root_oid);
@@ -131,6 +135,9 @@ void cmap::Recover()
 			container->runtime_initialize();
 		});
 	}
+
+	/* TODO: change to reserve when it's public */
+	container->rehash(reserve_count);
 }
 
 internal::iterator_base *cmap::new_iterator()

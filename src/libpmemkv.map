@@ -25,6 +25,7 @@ LIBPMEMKV_1.0 {
 		pmemkv_config_put_oid;
 		pmemkv_config_put_comparator;
 		pmemkv_config_put_force_create;
+		pmemkv_config_reserve;
 		pmemkv_comparator_new;
 		pmemkv_comparator_delete;
 		pmemkv_count_above;

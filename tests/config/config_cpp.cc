@@ -33,7 +33,7 @@ static void deleter(custom_type *ct_ptr)
 static void simple_test()
 {
 	/**
-	 * TEST: add and read data from config, using basic methods.
+	 * TEST: add and read data from config, using all available methods.
 	 */
 	auto cfg = new config;
 	UT_ASSERT(cfg != nullptr);
@@ -71,6 +71,9 @@ static void simple_test()
 	ASSERT_STATUS(s, status::OK);
 
 	s = cfg->put_force_create(true);
+	ASSERT_STATUS(s, status::OK);
+
+	s = cfg->reserve(256);
 	ASSERT_STATUS(s, status::OK);
 
 	std::string value_string;
@@ -127,6 +130,10 @@ static void simple_test()
 	s = cfg->get_uint64("force_create", int_us);
 	ASSERT_STATUS(s, status::OK);
 	UT_ASSERTeq(int_us, 1);
+
+	s = cfg->get_uint64("reserve", int_us);
+	ASSERT_STATUS(s, status::OK);
+	UT_ASSERTeq(int_us, 256);
 
 	delete cfg;
 	cfg = nullptr;

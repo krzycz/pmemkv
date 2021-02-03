@@ -3,7 +3,7 @@
 
 /*
  * pmemkv_basic_config.c -- example usage of the part of the pmemkv config API,
- * which should be preferred..
+ * which should be preferred.
  */
 
 #include <assert.h>
@@ -69,6 +69,13 @@ int main(int argc, char *argv[])
 	/* Adds pointer to oid (for details see libpmemkv(7)) to the config */
 	PMEMoid oid;
 	status = pmemkv_config_put_oid(config, &oid);
+	ASSERT(status == PMEMKV_STATUS_OK);
+
+	/* Specifies count of elements to reserve space for, in the database.
+	 * It's useful when there's known/estimated elements' count, so
+	 * possible allocations will be done at open/create and there will be
+	 * less container's resizing during actual database usage. */
+	status = pmemkv_config_reserve(config, 100);
 	ASSERT(status == PMEMKV_STATUS_OK);
 
 	pmemkv_config_delete(config);

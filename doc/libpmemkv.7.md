@@ -87,6 +87,13 @@ The following table shows three possible combinations of parameters (where '-' m
 A database file or a poolset file can also be created using **pmempool** utility (see **pmempool-create**(1)).
 When using **pmempool create**, "pmemkv" should be passed as layout for cmap engine and "pmemkv_\<engine-name\>" for other engines (e.g. "pmemkv_stree" for stree engine). Only PMEMOBJ pools are supported.
 
+This engine supports also following config parameter:
+
+* **reserve** -- demanded count of elements to reserve space/memory in the database at pmem::kv::open()
+	+ type: uint64_t
+	+ default value: 0 (meaning no reserving)
+	+ max value: <elements_count * element_size> can't exceed database size
+
 ## vcmap
 
 A volatile concurrent engine, backed by memkind. Data written using this engine is lost after database is closed.

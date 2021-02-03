@@ -50,7 +50,7 @@ static void xdeleter(struct custom_type_wrapper *ct_ptr)
 static void simple_test()
 {
 	/**
-	 * TEST: add and read data from config, using basic functions
+	 * TEST: add and read data from config, using all available functions
 	 */
 	pmemkv_config *config = pmemkv_config_new();
 	UT_ASSERT(config != NULL);
@@ -84,6 +84,9 @@ static void simple_test()
 	UT_ASSERTeq(ret, PMEMKV_STATUS_OK);
 
 	ret = pmemkv_config_put_force_create(config, true);
+	UT_ASSERTeq(ret, PMEMKV_STATUS_OK);
+
+	ret = pmemkv_config_reserve(config, 128);
 	UT_ASSERTeq(ret, PMEMKV_STATUS_OK);
 
 	const char *value_string;
@@ -134,6 +137,10 @@ static void simple_test()
 	ret = pmemkv_config_get_uint64(config, "force_create", &value_uint);
 	UT_ASSERTeq(ret, PMEMKV_STATUS_OK);
 	UT_ASSERTeq(value_uint, 1);
+
+	ret = pmemkv_config_get_uint64(config, "reserve", &value_uint);
+	UT_ASSERTeq(ret, PMEMKV_STATUS_OK);
+	UT_ASSERTeq(value_uint, 128);
 
 	pmemkv_config_delete(config);
 	config = NULL;

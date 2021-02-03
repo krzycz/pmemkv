@@ -71,6 +71,7 @@ int pmemkv_config_put_path(pmemkv_config *config, const char *value);
 int pmemkv_config_put_force_create(pmemkv_config *config, bool value);
 int pmemkv_config_put_comparator(pmemkv_config *config, pmemkv_comparator *comparator);
 int pmemkv_config_put_oid(pmemkv_config *config, PMEMoid *oid);
+int pmemkv_config_reserve(pmemkv_config *config, uint64_t value);
 
 int pmemkv_open(const char *engine, pmemkv_config *config, pmemkv_db **db);
 void pmemkv_close(pmemkv_db *kv);

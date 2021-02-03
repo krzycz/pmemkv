@@ -37,6 +37,7 @@ int pmemkv_config_put_path(pmemkv_config *config, const char *value);
 int pmemkv_config_put_force_create(pmemkv_config *config, bool value);
 int pmemkv_config_put_comparator(pmemkv_config *config, pmemkv_comparator *comparator);
 int pmemkv_config_put_oid(pmemkv_config *config, PMEMoid *oid);
+int pmemkv_config_reserve(pmemkv_config *config, uint64_t value);
 
 int pmemkv_config_put_data(pmemkv_config *config, const char *key, const void *value,
 			size_t value_size);
@@ -98,8 +99,8 @@ Every engine has documented all supported config parameters (please see **libpme
 
 `int pmemkv_config_put_path(pmemkv_config *config, const char *value);`
 
-:	Puts `value` to a config at key **path**. This function provides type
-	safety for `path` parameter.
+:	Puts `value` to a config at key `path`. This function provides type
+	safety for **path** parameter.
 
 `int pmemkv_config_put_force_create(pmemkv_config Wconfig, bool value);`
 
@@ -114,6 +115,15 @@ Every engine has documented all supported config parameters (please see **libpme
 `int pmemkv_config_put_oid(pmemkv_config *config, PMEMoid *oid);`
 
 :	Puts PMEMoid object to a config (for details see **libpmemkv**(7)).
+
+`int pmemkv_config_reserve(pmemkv_config *config, uint64_t value);`
+
+:	Puts `value` to a config at key `reserve`. This function provides type
+	safety for **reserve** parameter. It specifies demanded count of elements to reserve
+	space/memory in the database at pmem_kv_open call. 0 means no reserving, any other number
+	should increase container's capacity (or leave it as is if the value is less or equal to
+	the current capacity). If reservation exceeds (database's) available storage, pmem_kv_open
+	will return PMEMKV_STATUS_OUT_OF_MEMORY.
 
 `int pmemkv_config_put_uint64(pmemkv_config *config, const char *key, uint64_t value);`
 

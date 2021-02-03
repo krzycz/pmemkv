@@ -93,7 +93,7 @@ public:
 	internal::iterator_base *new_const_iterator() final;
 
 private:
-	void Recover();
+	void Recover(size_t reserve_count);
 	internal::cmap::map_t *container;
 };
 

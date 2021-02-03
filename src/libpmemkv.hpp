@@ -450,6 +450,7 @@ public:
 	status put_oid(PMEMoid *oid) noexcept;
 	template <typename Comparator>
 	status put_comparator(Comparator &&comparator);
+	status reserve(std::uint64_t reserve_count) noexcept;
 
 	template <typename T>
 	status get_data(const std::string &key, T *&value, std::size_t &number) const
@@ -1497,6 +1498,26 @@ inline status config::put_oid(PMEMoid *oid) noexcept
 		return status::UNKNOWN_ERROR;
 
 	return static_cast<status>(pmemkv_config_put_oid(this->config_.get(), oid));
+}
+
+/**
+ * Puts **reserve** value to a config. It specifies demanded count of elements to reserve
+ * space/memory in the database at pmem::kv::open() call. 0 means no reserving, any other
+ * number should increase container's capacity (or leave it as is if the value is less or
+ * equal to the current capacity). If reservation exceeds (database's) available storage,
+ * pmem::kv::open() will return pmem::kv::OUT_OF_MEMORY status.
+ *
+ * @param[in] reserve_count The count of elements to reserve space/memory for, in the
+ * database.
+ *
+ * @return pmem::kv::status
+ */
+inline status config::reserve(std::uint64_t reserve_count) noexcept
+{
+	if (init() != 0)
+		return status::UNKNOWN_ERROR;
+
+	return put_uint64("reserve", reserve_count);
 }
 
 /**

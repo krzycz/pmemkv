@@ -187,6 +187,8 @@ build_test_ext(NAME pmemobj_put_get_std_map_defrag SRC_FILES engine_scenarios/pm
 build_test_ext(NAME pmemobj_error_handling_tx_oom SRC_FILES engine_scenarios/pmemobj/error_handling_tx_oom.cc engine_scenarios/pmemobj/mock_tx_alloc.cc LIBS json dl_libs)
 build_test_ext(NAME pmemobj_error_handling_tx_oid SRC_FILES engine_scenarios/pmemobj/error_handling_tx_oid.cc LIBS json libpmemobj_cpp)
 build_test_ext(NAME pmemobj_put_get_std_map_oid SRC_FILES engine_scenarios/pmemobj/put_get_std_map_oid.cc LIBS json libpmemobj_cpp)
+build_test_ext(NAME pmemobj_put_get_std_map_reserve SRC_FILES engine_scenarios/pmemobj/put_get_std_map_reserve.cc LIBS json libpmemobj_cpp)
+build_test_ext(NAME pmemobj_error_handling_reserve SRC_FILES engine_scenarios/pmemobj/error_handling_reserve.cc LIBS json libpmemobj_cpp)
 
 # Tests for memkind engines
 build_test_ext(NAME memkind_error_handling SRC_FILES engine_scenarios/memkind/error_handling.cc LIBS json)
@@ -395,6 +397,16 @@ if(ENGINE_CMAP)
 			TRACERS none memcheck pmemcheck
 			SCRIPT pmemobj_based/pmemobj/put_get_std_map_oid.cmake
 			PARAMS 1000 100 200)
+
+	add_engine_test(ENGINE cmap
+			BINARY pmemobj_put_get_std_map_reserve
+			TRACERS none memcheck pmemcheck
+			SCRIPT pmemobj_based/default.cmake)
+
+	add_engine_test(ENGINE cmap
+			BINARY pmemobj_error_handling_reserve
+			TRACERS none memcheck pmemcheck
+			SCRIPT pmemobj_based/default.cmake)
 
 	add_engine_test(ENGINE cmap
 			BINARY put_get_std_map

@@ -222,6 +222,11 @@ int pmemkv_config_put_oid(pmemkv_config *config, PMEMoid *oid)
 	return pmemkv_config_put_object(config, "oid", oid, NULL);
 }
 
+int pmemkv_config_reserve(pmemkv_config *config, uint64_t value)
+{
+	return pmemkv_config_put_uint64(config, "reserve", value);
+}
+
 int pmemkv_config_get_data(pmemkv_config *config, const char *key, const void **value,
 			   size_t *value_size)
 {
