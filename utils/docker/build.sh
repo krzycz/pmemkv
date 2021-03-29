@@ -40,7 +40,8 @@ if [[ "$command" == "" ]]; then
 	case $TYPE in
 		debug)
 			builds=(tests_gcc_debug_cpp11
-					tests_gcc_debug_cpp14)
+					tests_gcc_debug_cpp14
+					tests_gcc_debug_cpp17_no_valgrind)
 			command="./run-build.sh ${builds[@]}";
 			;;
 		release)
@@ -53,7 +54,8 @@ if [[ "$command" == "" ]]; then
 			command="./run-build.sh ${builds[@]}";
 			;;
 		memcheck_drd)
-			builds=(tests_gcc_debug_cpp14_valgrind_memcheck_drd)
+			builds=(tests_gcc_debug_cpp14_valgrind_memcheck_drd
+				tests_gcc_debug_cpp17_valgrind_memcheck_drd)
 			command="./run-build.sh ${builds[@]}";
 			;;
 		compatibility)

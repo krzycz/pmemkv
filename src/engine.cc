@@ -41,6 +41,10 @@
 #include "engines-testing/dram_vcmap.h"
 #endif
 
+#ifdef ENGINE_DRAM_VCSMAP
+#include "engines-testing/dram_vcsmap.h"
+#endif
+
 namespace pmem
 {
 namespace kv
@@ -81,6 +85,9 @@ static constexpr const char *available_engines = "blackhole"
 #endif
 #ifdef ENGINE_DRAM_VCMAP
 						 ", dram_vcmap"
+#endif
+#ifdef ENGINE_DRAM_VCSMAP
+						 ", dram_vcsmap"
 #endif
 	;
 
@@ -164,6 +171,14 @@ engine_base::create_engine(const std::string &engine,
 		engine_base::check_config_null(engine, cfg);
 		return std::unique_ptr<engine_base>(
 			new pmem::kv::dram_vcmap(std::move(cfg)));
+	}
+#endif
+
+#ifdef ENGINE_DRAM_VCSMAP
+	if (engine == "dram_vcsmap") {
+		engine_base::check_config_null(engine, cfg);
+		return std::unique_ptr<engine_base>(
+			new pmem::kv::dram_vcsmap(std::move(cfg)));
 	}
 #endif
 

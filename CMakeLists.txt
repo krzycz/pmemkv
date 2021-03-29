@@ -38,6 +38,7 @@ option(ENGINE_TREE3 "enable experimental tree3 engine" OFF)
 option(ENGINE_RADIX "enable experimental radix engine" OFF)
 option(ENGINE_ROBINHOOD "enable experimental robinhood engine (requires CXX_STANDARD to be set to value >= 14)" OFF)
 option(ENGINE_DRAM_VCMAP "enable testing dram_vcmap engine" OFF)
+option(ENGINE_DRAM_VCSMAP "enable testing dram_vcsmap engine (requires CXX_STANDARD to be set to value >= 17)" OFF)
 
 # ----------------------------------------------------------------- #
 ## Set required and useful variables
@@ -155,6 +156,13 @@ if(ENGINE_DRAM_VCMAP)
 		src/engines-testing/dram_vcmap.cc
 	)
 endif()
+if(ENGINE_DRAM_VCSMAP)
+	list(APPEND SOURCE_FILES
+		src/engines-testing/dram_vcsmap.h
+		src/engines-testing/dram_vcsmap.cc
+	)
+endif()
+
 
 # ----------------------------------------------------------------- #
 ## Setup defines and check status of each engine
@@ -221,6 +229,17 @@ if(ENGINE_DRAM_VCMAP)
 else()
 	message(STATUS "DRAM_VCMAP engine is OFF")
 endif()
+if(ENGINE_DRAM_VCSMAP)
+	add_definitions(-DENGINE_DRAM_VCSMAP)
+	message(STATUS "DRAM_VCSMAP engine is ON")
+
+	if(CXX_STANDARD LESS 17)
+		message(FATAL_ERROR "CXX_STANDARD must be >= 17 if ENGINE_DRAM_VCSMAP is ON")
+	endif()
+else()
+	message(STATUS "DRAM_VCSMAP engine is OFF")
+endif()
+
 
 # ----------------------------------------------------------------- #
 ## Set compiler's flags
@@ -275,7 +294,7 @@ if(ENGINE_VSMAP OR ENGINE_VCMAP)
 	list(APPEND DEB_DEPENDS "libmemkind0 (>= ${MEMKIND_REQUIRED_VERSION})")
 endif()
 
-if(ENGINE_VCMAP OR ENGINE_DRAM_VCMAP)
+if(ENGINE_VCMAP OR ENGINE_DRAM_VCMAP OR ENGINE_DRAM_VCSMAP)
 	include(tbb)
 	add_definitions(-DTBB_DEFINE_STD_HASH_SPECIALIZATIONS)
 	list(APPEND PKG_CONFIG_REQUIRES tbb)
@@ -299,7 +318,7 @@ target_link_libraries(pmemkv PRIVATE ${LIBPMEMOBJ++_LIBRARIES})
 if(ENGINE_VSMAP OR ENGINE_VCMAP)
 	target_link_libraries(pmemkv PRIVATE ${MEMKIND_LIBRARIES})
 endif()
-if(ENGINE_VCMAP OR ENGINE_DRAM_VCMAP)
+if(ENGINE_VCMAP OR ENGINE_DRAM_VCMAP OR ENGINE_DRAM_VCSMAP)
 	target_link_libraries(pmemkv PRIVATE ${TBB_LIBRARIES})
 endif()
 
@@ -363,7 +382,9 @@ add_cppstyle(src ${CMAKE_CURRENT_SOURCE_DIR}/src/*.c*
 		${CMAKE_CURRENT_SOURCE_DIR}/src/engines/*.h*
 		${CMAKE_CURRENT_SOURCE_DIR}/src/engines-experimental/*.c*
 		${CMAKE_CURRENT_SOURCE_DIR}/src/engines-experimental/*.h*
-		${CMAKE_CURRENT_SOURCE_DIR}/src/engines-experimental/stree/*.h*)
+		${CMAKE_CURRENT_SOURCE_DIR}/src/engines-experimental/stree/*.h*
+		${CMAKE_CURRENT_SOURCE_DIR}/src/engines-testing/*.c*
+		${CMAKE_CURRENT_SOURCE_DIR}/src/engines-testing/*.h*)
 
 add_check_whitespace(main ${PMEMKV_ROOT_DIR}/utils/check_whitespace
 			${CMAKE_CURRENT_SOURCE_DIR}/utils/check_license/*.sh
@@ -376,7 +397,9 @@ add_check_whitespace(src ${CMAKE_CURRENT_SOURCE_DIR}/src/*.c*
 		${CMAKE_CURRENT_SOURCE_DIR}/src/engines/*.h*
 		${CMAKE_CURRENT_SOURCE_DIR}/src/engines-experimental/*.c*
 		${CMAKE_CURRENT_SOURCE_DIR}/src/engines-experimental/*.h*
-		${CMAKE_CURRENT_SOURCE_DIR}/src/engines-experimental/stree/*.h*)
+		${CMAKE_CURRENT_SOURCE_DIR}/src/engines-experimental/stree/*.h*
+		${CMAKE_CURRENT_SOURCE_DIR}/src/engines-testing/*.c*
+		${CMAKE_CURRENT_SOURCE_DIR}/src/engines-testing/*.h*)
 
 # ----------------------------------------------------------------- #
 ## Add sub-directories if builds enabled

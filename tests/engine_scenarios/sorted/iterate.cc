@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: BSD-3-Clause
-/* Copyright 2020, Intel Corporation */
+/* Copyright 2020-2021, Intel Corporation */
 
 #include "iterate.hpp"
 
@@ -21,43 +21,43 @@ static void CommonCountTest(std::string engine, pmem::kv::config &&config)
 
 	std::size_t cnt;
 	ASSERT_STATUS(kv.count_all(cnt), status::OK);
-	UT_ASSERT(cnt == 6);
+	UT_ASSERTeq(cnt, 6);
 
 	/* insert new key */
 	ASSERT_STATUS(kv.put("BD", "7"), status::OK);
 	ASSERT_STATUS(kv.count_all(cnt), status::OK);
-	UT_ASSERT(cnt == 7);
+	UT_ASSERTeq(cnt, 7);
 
 	cnt = std::numeric_limits<std::size_t>::max();
 	/* mixed count functions checked with empty key */
 	ASSERT_STATUS(kv.count_above(EMPTY_KEY, cnt), status::OK);
-	UT_ASSERT(cnt == 7);
+	UT_ASSERTeq(cnt, 7);
 	cnt = 0;
 	ASSERT_STATUS(kv.count_equal_above(EMPTY_KEY, cnt), status::OK);
-	UT_ASSERT(cnt == 7);
+	UT_ASSERTeq(cnt, 7);
 	ASSERT_STATUS(kv.count_below(EMPTY_KEY, cnt), status::OK);
-	UT_ASSERT(cnt == 0);
+	UT_ASSERTeq(cnt, 0);
 	cnt = 256;
 	ASSERT_STATUS(kv.count_equal_below(EMPTY_KEY, cnt), status::OK);
-	UT_ASSERT(cnt == 0);
+	UT_ASSERTeq(cnt, 0);
 	ASSERT_STATUS(kv.count_between(EMPTY_KEY, "ZZZZ", cnt), status::OK);
-	UT_ASSERT(cnt == 7);
+	UT_ASSERTeq(cnt, 7);
 	cnt = 10000;
 	ASSERT_STATUS(kv.count_between(EMPTY_KEY, MAX_KEY, cnt), status::OK);
-	UT_ASSERT(cnt == 7);
+	UT_ASSERTeq(cnt, 7);
 
 	/* group of check for each count_* function, tested with various keys */
 	ASSERT_STATUS(kv.count_above("A", cnt), status::OK);
-	UT_ASSERT(cnt == 6);
+	UT_ASSERTeq(cnt, 6);
 	ASSERT_STATUS(kv.count_above("B", cnt), status::OK);
-	UT_ASSERT(cnt == 3);
+	UT_ASSERTeq(cnt, 3);
 	ASSERT_STATUS(kv.count_above("BC", cnt), status::OK);
-	UT_ASSERT(cnt == 1);
+	UT_ASSERTeq(cnt, 1);
 	ASSERT_STATUS(kv.count_above("BD", cnt), status::OK);
-	UT_ASSERT(cnt == 0);
+	UT_ASSERTeq(cnt, 0);
 	cnt = 1;
 	ASSERT_STATUS(kv.count_above("ZZ", cnt), status::OK);
-	UT_ASSERT(cnt == 0);
+	UT_ASSERTeq(cnt, 0);
 
 	cnt = 0;
 	ASSERT_STATUS(kv.count_equal_above("A", cnt), status::OK);

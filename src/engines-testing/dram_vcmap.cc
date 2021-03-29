@@ -8,8 +8,9 @@ namespace pmem
 namespace kv
 {
 
-template<>
-std::string dram_vcmap::name() {
+template <>
+std::string dram_vcmap::name()
+{
 	return "dram_vcmap";
 }
 

@@ -149,6 +149,7 @@ engines_flags=(
 	ENGINE_RADIX
 	ENGINE_ROBINHOOD
 	ENGINE_DRAM_VCMAP
+	ENGINE_DRAM_VCSMAP
 	# the last item is to test all engines disabled
 	BLACKHOLE_TEST
 )
@@ -162,7 +163,7 @@ do
 	echo "##############################################################"
 	echo "### Verifying building of the '$engine_flag' engine"
 	echo "##############################################################"
-	cmake .. -DCXX_STANDARD=14 \
+	cmake .. -DCXX_STANDARD=17 \
 		-DENGINE_VSMAP=OFF \
 		-DENGINE_VCMAP=OFF \
 		-DENGINE_CMAP=OFF \
@@ -184,7 +185,7 @@ echo "##############################################################"
 mkdir $WORKDIR/build
 cd $WORKDIR/build
 
-cmake .. -DCXX_STANDARD=14 \
+cmake .. -DCXX_STANDARD=17 \
 	-DENGINE_VSMAP=ON \
 	-DENGINE_VCMAP=ON \
 	-DENGINE_CMAP=ON \
@@ -194,6 +195,7 @@ cmake .. -DCXX_STANDARD=14 \
 	-DENGINE_RADIX=ON \
 	-DENGINE_ROBINHOOD=ON \
 	-DENGINE_DRAM_VCMAP=ON \
+	-DENGINE_DRAM_VCSMAP=ON \
 	-DBUILD_JSON_CONFIG=${BUILD_JSON_CONFIG}
 make -j$(nproc)
 # list all tests in this build

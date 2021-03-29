@@ -153,6 +153,67 @@ function tests_gcc_debug_cpp14_valgrind_memcheck_drd() {
 }
 
 ###############################################################################
+# BUILD build_gcc_debug_cpp17 (no tests)
+###############################################################################
+
+function build_gcc_debug_cpp17() {
+	mkdir build
+	cd build
+
+	CC=gcc CXX=g++ \
+	cmake .. -DCMAKE_BUILD_TYPE=Debug \
+		-DTEST_DIR=$TEST_DIR \
+		-DCMAKE_INSTALL_PREFIX=$PREFIX \
+		-DCOVERAGE=$COVERAGE \
+		-DENGINE_CSMAP=1 \
+		-DENGINE_RADIX=1 \
+		-DENGINE_ROBINHOOD=1 \
+		-DENGINE_DRAM_VCMAP=1 \
+		-DENGINE_DRAM_VCSMAP=1 \
+		-DBUILD_JSON_CONFIG=${BUILD_JSON_CONFIG} \
+		-DTESTS_LONG=${TESTS_LONG} \
+		-DDEVELOPER_MODE=1 \
+		-DTESTS_USE_FORCED_PMEM=${TESTS_USE_FORCED_PMEM} \
+		-DTESTS_PMEMOBJ_DRD_HELGRIND=1 \
+		-DCXX_STANDARD=17
+
+	make -j$(nproc)
+}
+
+
+###############################################################################
+# BUILD tests_gcc_debug_cpp17_no_valgrind
+###############################################################################
+function tests_gcc_debug_cpp17_no_valgrind() {
+	printf "\n$(tput setaf 1)$(tput setab 7)BUILD ${FUNCNAME[0]} START$(tput sgr 0)\n"
+	build_gcc_debug_cpp17
+	ctest -E "_memcheck|_drd|_helgrind|_pmemcheck|_pmreorder" --timeout ${TEST_TIMEOUT} --output-on-failure
+
+	if [ "$COVERAGE" == "1" ]; then
+		upload_codecov gcc_debug_cpp17
+	fi
+
+	workspace_cleanup
+	printf "$(tput setaf 1)$(tput setab 7)BUILD ${FUNCNAME[0]} END$(tput sgr 0)\n\n"
+}
+
+###############################################################################
+# BUILD tests_gcc_debug_cpp17_valgrind_memcheck_drd
+###############################################################################
+function tests_gcc_debug_cpp17_valgrind_memcheck_drd() {
+	printf "\n$(tput setaf 1)$(tput setab 7)BUILD ${FUNCNAME[0]} START$(tput sgr 0)\n"
+	build_gcc_debug_cpp17
+	ctest -R "_memcheck|_drd" --timeout ${TEST_TIMEOUT} --output-on-failure
+
+	if [ "$COVERAGE" == "1" ]; then
+		upload_codecov gcc_debug_cpp17_valgrind_memcheck_drd
+	fi
+
+	workspace_cleanup
+	printf "$(tput setaf 1)$(tput setab 7)BUILD ${FUNCNAME[0]} END$(tput sgr 0)\n\n"
+}
+
+###############################################################################
 # BUILD tests_clang_release_cpp20 llvm
 ###############################################################################
 function tests_clang_release_cpp20() {
@@ -174,6 +235,7 @@ function tests_clang_release_cpp20() {
 		-DENGINE_RADIX=1 \
 		-DENGINE_ROBINHOOD=1 \
 		-DENGINE_DRAM_VCMAP=1 \
+		-DENGINE_DRAM_VCSMAP=1 \
 		-DBUILD_JSON_CONFIG=${BUILD_JSON_CONFIG} \
 		-DTESTS_LONG=${TESTS_LONG} \
 		-DTESTS_USE_FORCED_PMEM=${TESTS_USE_FORCED_PMEM} \

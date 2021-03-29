@@ -82,6 +82,7 @@ all language bindings and utilities. Engines are loaded by name at runtime.
 | [stree](doc/ENGINES-experimental.md#stree) | Sorted persistent B+ tree | Yes | No | Yes |
 | [robinhood](doc/ENGINES-experimental.md#robinhood) | Persistent hash map with Robin Hood hashing | Yes | Yes | No |
 | [dram_vcmap](doc/ENGINES-testing.md#dram_vcmap) | Volatile concurrent hash map placed entirely on DRAM | Yes | Yes | No |
+| [dram_vcsmap](doc/ENGINES-testing.md#dram_vsmcap) | Volatile sorted concurrent map placed entirely on DRAM | Yes | Yes | YES |
 
 The production quality engines are described in the [libpmemkv(7)](doc/libpmemkv.7.md#engines) manual
 and the experimental ones are described in the [ENGINES-experimental.md](doc/ENGINES-experimental.md) file.

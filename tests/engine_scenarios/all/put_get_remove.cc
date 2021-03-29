@@ -66,7 +66,7 @@ static void GetMultipleTest(pmem::kv::db &kv)
 		      status::OK);
 	std::size_t cnt = std::numeric_limits<std::size_t>::max();
 	ASSERT_STATUS(kv.count_all(cnt), status::OK);
-	UT_ASSERT(cnt == 5);
+	UT_ASSERTeq(cnt, 5);
 	ASSERT_STATUS(kv.exists(entry_from_string("abc")), status::OK);
 	std::string value1;
 	ASSERT_STATUS(kv.get(entry_from_string("abc"), &value1), status::OK);
@@ -102,7 +102,7 @@ static void GetMultiple2Test(pmem::kv::db &kv)
 		      status::OK);
 	std::size_t cnt = std::numeric_limits<std::size_t>::max();
 	ASSERT_STATUS(kv.count_all(cnt), status::OK);
-	UT_ASSERT(cnt == 2);
+	UT_ASSERTeq(cnt, 2);
 	std::string value1;
 	ASSERT_STATUS(kv.get(entry_from_string("key1"), &value1), status::OK);
 	UT_ASSERT(value1 == entry_from_string("value1"));

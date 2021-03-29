@@ -15,8 +15,7 @@ template <typename AllocatorT>
 class std_allocator_wrapper : public std::allocator<AllocatorT> {
 public:
 	using std::allocator<AllocatorT>::allocator;
-	std_allocator_wrapper(internal::config &cfg)
-	    : std::allocator<AllocatorT>()
+	std_allocator_wrapper(internal::config &cfg) : std::allocator<AllocatorT>()
 	{
 	}
 };

@@ -2141,4 +2141,91 @@ if(ENGINE_DRAM_VCMAP)
 			SCRIPT dram/default.cmake)
 endif(ENGINE_DRAM_VCMAP)
 ################################################################################
+###################################### DRAM_VCSMAP #############################
+if(ENGINE_DRAM_VCSMAP)
+	add_engine_test(ENGINE dram_vcsmap
+			BINARY c_api_null_db_config
+			TRACERS none memcheck
+			SCRIPT dram/default.cmake)
+
+	add_engine_test(ENGINE dram_vcsmap
+			BINARY put_get_remove
+			TRACERS none memcheck
+			SCRIPT dram/default.cmake)
+
+	add_engine_test(ENGINE dram_vcsmap
+			BINARY put_get_remove_not_aligned
+			TRACERS none memcheck
+			SCRIPT dram/default.cmake)
+
+	add_engine_test(ENGINE dram_vcsmap
+			BINARY put_get_remove_charset_params
+			TRACERS none memcheck
+			SCRIPT dram/default.cmake
+			PARAMS 16 8)
+
+	add_engine_test(ENGINE dram_vcsmap
+			BINARY put_get_remove_long_key
+			TRACERS none memcheck
+			SCRIPT dram/default.cmake)
+
+	add_engine_test(ENGINE dram_vcsmap
+			BINARY put_get_remove_params
+			TRACERS none
+			SCRIPT dram/default.cmake
+			PARAMS 400000)
+
+	add_engine_test(ENGINE dram_vcsmap
+			BINARY put_get_remove_params
+			TRACERS memcheck
+			SCRIPT dram/default.cmake
+			PARAMS 4000)
+
+	add_engine_test(ENGINE dram_vcsmap
+			BINARY put_get_std_map
+			TRACERS none memcheck
+			SCRIPT dram/default.cmake
+			PARAMS 1000 100 200)
+
+	add_engine_test(ENGINE dram_vcsmap
+			BINARY iterate
+			TRACERS none memcheck
+			SCRIPT dram/default.cmake)
+
+	add_engine_test(ENGINE dram_vcsmap
+			BINARY concurrent_iterate_params
+			TRACERS none memcheck
+			SCRIPT dram/default.cmake
+			PARAMS 24 200)
+
+	add_engine_test(ENGINE dram_vcsmap
+			BINARY concurrent_put_get_remove_params
+			TRACERS none memcheck
+			SCRIPT dram/default.cmake
+			PARAMS 8 50)
+
+	add_engine_test(ENGINE dram_vcsmap
+			BINARY concurrent_put_get_remove_gen_params
+			TRACERS none memcheck
+			SCRIPT dram/default.cmake
+			PARAMS 8 50 100)
+
+	add_engine_test(ENGINE dram_vcsmap
+			BINARY concurrent_put_get_remove_single_op_params
+			TRACERS none
+			SCRIPT dram/default.cmake
+			PARAMS 1000)
+
+	add_engine_test(ENGINE dram_vcsmap
+			BINARY concurrent_put_get_remove_single_op_params
+			TRACERS memcheck
+			SCRIPT dram/default.cmake
+			PARAMS 400)
+
+	add_engine_test(ENGINE dram_vcsmap
+			BINARY transaction_not_supported
+			TRACERS none memcheck
+			SCRIPT dram/default.cmake)
+endif(ENGINE_DRAM_VCSMAP)
+################################################################################
 
