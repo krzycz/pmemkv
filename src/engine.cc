@@ -17,6 +17,10 @@
 #include "engines/cmap.h"
 #endif
 
+#ifdef ENGINE_FMAP
+#include "engines/fmap.h"
+#endif
+
 #ifdef ENGINE_CSMAP
 #include "engines-experimental/csmap.h"
 #endif
@@ -57,6 +61,9 @@ engine_base::~engine_base()
 static constexpr const char *available_engines = "blackhole"
 #ifdef ENGINE_CMAP
 						 ", cmap"
+#endif
+#ifdef ENGINE_FMAP
+						 ", fmap"
 #endif
 #ifdef ENGINE_CSMAP
 						 ", csmap"
@@ -106,6 +113,13 @@ engine_base::create_engine(const std::string &engine,
 	if (engine == "cmap") {
 		engine_base::check_config_null(engine, cfg);
 		return std::unique_ptr<engine_base>(new pmem::kv::cmap(std::move(cfg)));
+	}
+#endif
+
+#ifdef ENGINE_FMAP
+	if (engine == "fmap") {
+		engine_base::check_config_null(engine, cfg);
+		return std::unique_ptr<engine_base>(new pmem::kv::fmap(std::move(cfg)));
 	}
 #endif
 

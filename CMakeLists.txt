@@ -30,6 +30,7 @@ option(USE_CCACHE "use ccache if it is available in the system" ON)
 
 # Each engine can be enabled separately.
 option(ENGINE_CMAP "enable cmap engine" ON)
+option(ENGINE_FMAP "enable fmap engine" ON)
 option(ENGINE_VCMAP "enable vcmap engine" ON)
 option(ENGINE_VSMAP "enable vsmap engine" ON)
 option(ENGINE_CSMAP "enable experimental csmap engine (requires CXX_STANDARD to be set to value >= 14)" OFF)
@@ -102,6 +103,16 @@ if(ENGINE_CMAP)
 		src/engines/cmap.cc
 	)
 endif()
+if(ENGINE_FMAP)
+	list(APPEND SOURCE_FILES
+		src/engines/db.hpp
+		src/engines/Utils.hpp
+		src/engines/AepManager.hpp
+		src/engines/AepManager.cpp
+		src/engines/fmap.h
+		src/engines/fmap.cc
+	)
+endif()
 if(ENGINE_CSMAP)
 	list(APPEND SOURCE_FILES
 		src/engines-experimental/csmap.h
@@ -164,6 +175,12 @@ if(ENGINE_CMAP)
 	message(STATUS "CMAP engine is ON")
 else()
 	message(STATUS "CMAP engine is OFF")
+endif()
+if(ENGINE_FMAP)
+	add_definitions(-DENGINE_FMAP)
+	message(STATUS "FMAP engine is ON")
+else()
+	message(STATUS "FMAP engine is OFF")
 endif()
 if(ENGINE_CSMAP)
 	add_definitions(-DENGINE_CSMAP)
@@ -230,6 +247,10 @@ if(DEVELOPER_MODE)
 endif()
 if(COVERAGE)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -coverage")
+endif()
+
+if(ENGINE_FMAP)
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse4 -mavx -mavx2 -momit-leaf-frame-pointer")
 endif()
 
 add_common_flag(-Wall)

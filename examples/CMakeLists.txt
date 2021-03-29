@@ -28,7 +28,10 @@ add_cppstyle(examples ${CMAKE_CURRENT_SOURCE_DIR}/pmemkv_basic_c/*.c
 		${CMAKE_CURRENT_SOURCE_DIR}/pmemkv_transaction_cpp/*.cpp
 		${CMAKE_CURRENT_SOURCE_DIR}/pmemkv_transaction_c/*.c
 		${CMAKE_CURRENT_SOURCE_DIR}/pmemkv_iterator_c/*.c
-		${CMAKE_CURRENT_SOURCE_DIR}/pmemkv_iterator_cpp/*.cpp)
+		${CMAKE_CURRENT_SOURCE_DIR}/pmemkv_iterator_cpp/*.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/pmemkv_fmap_cpp/*.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/pmemkv_benchmark_c/*.c
+		${CMAKE_CURRENT_SOURCE_DIR}/pmemkv_fmap_benchmark_c/*.c)
 
 add_check_whitespace(examples ${CMAKE_CURRENT_SOURCE_DIR}/*.*
 		${CMAKE_CURRENT_SOURCE_DIR}/pmemkv_basic_c/*.*
@@ -41,7 +44,10 @@ add_check_whitespace(examples ${CMAKE_CURRENT_SOURCE_DIR}/*.*
 		${CMAKE_CURRENT_SOURCE_DIR}/pmemkv_transaction_cpp/*.*
 		${CMAKE_CURRENT_SOURCE_DIR}/pmemkv_transaction_c/*.*
 		${CMAKE_CURRENT_SOURCE_DIR}/pmemkv_iterator_c/*.*
-		${CMAKE_CURRENT_SOURCE_DIR}/pmemkv_iterator_cpp/*.*)
+		${CMAKE_CURRENT_SOURCE_DIR}/pmemkv_iterator_cpp/*.*
+		${CMAKE_CURRENT_SOURCE_DIR}/pmemkv_fmap_cpp/*.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/pmemkv_benchmark_c/*.c
+		${CMAKE_CURRENT_SOURCE_DIR}/pmemkv_fmap_benchmark_c/*.c)
 
 function(add_example name)
 	set(srcs ${ARGN})
@@ -59,6 +65,9 @@ if(ENGINE_CMAP)
 
 	add_example(pmemkv_basic_c pmemkv_basic_c/pmemkv_basic.c)
 	target_link_libraries(example-pmemkv_basic_c pmemkv)
+
+	add_example(pmemkv_benchmark_c pmemkv_benchmark_c/pmemkv_benchmark.c)
+	target_link_libraries(example-pmemkv_benchmark_c pmemkv)
 
 	add_example(pmemkv_pmemobj_cpp pmemkv_pmemobj_cpp/pmemkv_pmemobj.cpp)
 	target_link_libraries(example-pmemkv_pmemobj_cpp pmemkv ${LIBPMEMOBJ++_LIBRARIES})
@@ -79,7 +88,19 @@ else()
 		"not built. If you want to build them use -DENGINE_CMAP=ON option.")
 endif()
 
-if(ENGINE_CSMAP)
+if(ENGINE_FMAP)
+	add_example(pmemkv_fmap_cpp pmemkv_fmap_cpp/pmemkv_fmap.cpp)
+	target_link_libraries(example-pmemkv_fmap_cpp pmemkv)
+
+	add_example(pmemkv_fmap_benchmark_c pmemkv_fmap_benchmark_c/pmemkv_fmap_benchmark.c)
+	target_link_libraries(example-pmemkv_fmap_benchmark_c pmemkv pthread)
+else()
+	message(STATUS
+		"Some examples use fmap engine, which is disabled, hence they are "
+		"not built. If you want to build them use -DENGINE_FMAP=ON option.")
+endif()
+
+if (ENGINE_CSMAP)
 	add_example(pmemkv_comparator_cpp pmemkv_comparator_cpp/pmemkv_comparator.cpp)
 	target_link_libraries(example-pmemkv_comparator_cpp pmemkv)
 
