@@ -10,12 +10,13 @@
 set -e
 
 # contains new libmemkind namespace
-MEMKIND_VERSION=v1.11.0
+MEMKIND_VERSION=${1:v1.11.0}
+WORKDIR=${2:$(pwd)}
+REPO=${3:-"https://github.com/memkind/memkind"}
+MEMKIND_DIR=${WORKDIR}/memkind
 
-WORKDIR=$(pwd)
-
-git clone https://github.com/memkind/memkind
-cd ${WORKDIR}/memkind
+git clone ${REPO} ${MEMKIND_DIR}
+pushd ${MEMKIND_DIR}
 git checkout ${MEMKIND_VERSION}
 
 echo "set OS-specific configure options"
@@ -32,5 +33,5 @@ make -j$(nproc)
 make -j$(nproc) install
 
 echo "cleanup:"
-cd ${WORKDIR}
-rm -r memkind
+popd
+rm -r ${MEMKIND_DIR}
