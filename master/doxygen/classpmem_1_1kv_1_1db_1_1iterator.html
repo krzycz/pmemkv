@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">PMEMKV
-   &#160;<span id="projectnumber">1.4-git76.ge57429f</span>
+   &#160;<span id="projectnumber">1.4-git148.g4b78a10</span>
    </div>
    <div id="projectbrief">This is the C++ documentation for PMEMKV.</div>
   </td>
@@ -275,37 +275,44 @@ class pmem::kv::db::iterator&lt; IsConst &gt;</h3>
 <div class="line"><span class="comment">         * iterator isn&#39;t copyable */</span></div>
 <div class="line">        <span class="keyword">auto</span> &amp;w_it = res_w_it.get_value();</div>
 <div class="line"> </div>
-<div class="line">        LOG(<span class="stringliteral">&quot;Modify value of the element lower than \&quot;5\&quot;&quot;</span>);</div>
+<div class="line">        LOG(<span class="stringliteral">&quot;Modify value of the elements lower than \&quot;5\&quot;&quot;</span>);</div>
 <div class="line">        <span class="comment">/* seek to the element lower than &quot;5&quot; */</span></div>
 <div class="line">        <a class="code" href="namespacepmem_1_1kv.html#a966ec5140bba4b6f4cc4e9aa15979231">status</a> s = w_it.seek_lower(<span class="stringliteral">&quot;5&quot;</span>);</div>
 <div class="line">        ASSERT(s == status::OK);</div>
+<div class="line">        <span class="keywordflow">do</span> {</div>
+<div class="line">            <span class="comment">/* read a value before writing */</span></div>
+<div class="line">            std::string value_before_write =</div>
+<div class="line">                w_it.read_range().get_value().data();</div>
 <div class="line"> </div>
-<div class="line">        <span class="comment">/* read a value before writing */</span></div>
-<div class="line">        std::string value_before_write = w_it.read_range().get_value().data();</div>
+<div class="line">            <span class="comment">/* Get a write range. By default it is a whole value (pos = 0, n =</span></div>
+<div class="line"><span class="comment">             * std::numeric_limits&lt;size_t&gt;::max()). */</span></div>
+<div class="line">            <span class="keyword">auto</span> res = w_it.write_range();</div>
+<div class="line">            ASSERT(res.is_ok());</div>
 <div class="line"> </div>
-<div class="line">        <span class="comment">/* Get a write range. By default it is a whole value (pos = 0, n =</span></div>
-<div class="line"><span class="comment">         * std::numeric_limits&lt;size_t&gt;::max()). */</span></div>
-<div class="line">        <span class="keyword">auto</span> res = w_it.write_range();</div>
-<div class="line">        ASSERT(res.is_ok());</div>
+<div class="line">            <span class="comment">/* set all chars to &#39;x&#39; */</span></div>
+<div class="line">            <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;c : res.get_value()) {</div>
+<div class="line">                <span class="comment">/* note that you can&#39;t read elements from write_range, so</span></div>
+<div class="line"><span class="comment">                 * e.g. char x = c isn&#39;t possible. If you want to read a</span></div>
+<div class="line"><span class="comment">                 * value, you need to use read_range method instead of</span></div>
+<div class="line"><span class="comment">                 * write_range */</span></div>
+<div class="line">                c = <span class="charliteral">&#39;x&#39;</span>;</div>
+<div class="line">            }</div>
 <div class="line"> </div>
-<div class="line">        <span class="comment">/* set all chars to &#39;x&#39; */</span></div>
-<div class="line">        <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;c : res.get_value()) {</div>
-<div class="line">            <span class="comment">/* note that you can&#39;t read elements from write_range, so e.g.</span></div>
-<div class="line"><span class="comment">             * char x = c isn&#39;t possible. If you want to read a value, you</span></div>
-<div class="line"><span class="comment">             * need to use read_range method instead of write_range */</span></div>
-<div class="line">            c = <span class="charliteral">&#39;x&#39;</span>;</div>
-<div class="line">        }</div>
+<div class="line">            <span class="comment">/* commit modifications */</span></div>
+<div class="line">            w_it.commit();</div>
 <div class="line"> </div>
-<div class="line">        <span class="comment">/* commit modifications */</span></div>
-<div class="line">        w_it.commit();</div>
+<div class="line">            <a class="code" href="classpmem_1_1kv_1_1result.html">pmem::kv::result&lt;string_view&gt;</a> key_result = w_it.key();</div>
+<div class="line">            ASSERT(key_result.<a class="code" href="classpmem_1_1kv_1_1result.html#a1cd594fafa5f58913bf31d7b05451881">is_ok</a>());</div>
+<div class="line">            std::string current_key = key_result.<a class="code" href="classpmem_1_1kv_1_1result.html#a422a5c6333122b65a527f446c8382686">get_value</a>().data();</div>
+<div class="line">            LOG(<span class="stringliteral">&quot;Key = &quot;</span> + current_key);</div>
 <div class="line"> </div>
-<div class="line">        std::string current_value = w_it.read_range().get_value().data();</div>
-<div class="line">        <span class="comment">/* check if the value has changed */</span></div>
-<div class="line">        ASSERT(current_value.compare(value_before_write) != 0);</div>
-<div class="line">        ASSERT(current_value.compare(std::string(current_value.size(), <span class="charliteral">&#39;x&#39;</span>)) ==</div>
-<div class="line">               0);</div>
-<div class="line">        LOG(<span class="stringliteral">&quot;Value after commit = &quot;</span> + current_value);</div>
-<div class="line"> </div>
+<div class="line">            std::string current_value = w_it.read_range().get_value().data();</div>
+<div class="line">            <span class="comment">/* check if the value has changed */</span></div>
+<div class="line">            ASSERT(current_value.compare(value_before_write) != 0);</div>
+<div class="line">            ASSERT(current_value.compare(</div>
+<div class="line">                       std::string(current_value.size(), <span class="charliteral">&#39;x&#39;</span>)) == 0);</div>
+<div class="line">            LOG(<span class="stringliteral">&quot;Value after commit = &quot;</span> + current_value);</div>
+<div class="line">        } <span class="keywordflow">while</span> (w_it.prev() == status::OK);</div>
 <div class="line">        <span class="comment">/* write iterator is being destroyed now */</span></div>
 <div class="line">    }</div>
 <div class="line">}</div>
@@ -1191,7 +1198,7 @@ template&lt;bool IsConst&gt; </div>
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>/tmp/pmemkv-CTO/src/<a class="el" href="libpmemkv_8hpp_source.html">libpmemkv.hpp</a></li>
+<li>/tmp/pmemkv-myD/src/<a class="el" href="libpmemkv_8hpp_source.html">libpmemkv.hpp</a></li>
 </ul>
 </div><!-- contents -->
 <div class="ttc" id="aclasspmem_1_1kv_1_1db_1_1iterator_html_aa4ed0549c6e90068e834b4482d61b73d"><div class="ttname"><a href="classpmem_1_1kv_1_1db_1_1iterator.html#aa4ed0549c6e90068e834b4482d61b73d">pmem::kv::db::iterator::seek_to_last</a></div><div class="ttdeci">status seek_to_last() noexcept</div><div class="ttdoc">Changes iterator position to the last record.</div><div class="ttdef"><b>Definition:</b> libpmemkv.hpp:958</div></div>

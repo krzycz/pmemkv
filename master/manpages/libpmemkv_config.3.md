@@ -85,11 +85,12 @@ List of options which are required by pmemkv database is specific to an engine.
 Every engine has documented all supported config parameters (please see **libpmemkv**(7) for details).
 
 `pmemkv_config *pmemkv_config_new(void);`
-:	Creates an instance of configuration for pmemkv database.
 
+:	Creates an instance of configuration for pmemkv database.
 	On failure, NULL is returned.
 
 `void pmemkv_config_delete(pmemkv_config *config);`
+
 :	Deletes pmemkv_config. Should be called ONLY for configs which were not
 	passed to pmemkv_open (as this function moves ownership of the config to
 	the database).

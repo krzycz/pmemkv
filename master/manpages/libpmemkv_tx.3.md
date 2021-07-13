@@ -24,7 +24,7 @@ secondary_title: pmemkv
 
 **pmemkv_tx** - Transactions API for libpmemkv
 
-This API is EXPERIMENTAL and might change.
+This API is **EXPERIMENTAL** and might change.
 
 # SYNOPSIS #
 
