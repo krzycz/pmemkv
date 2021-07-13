@@ -19,7 +19,7 @@ static void FailsToOpenInstanceWithInvalidPath(std::string engine,
 	pmem::kv::config cfg;
 	auto s = cfg.put_path(non_existent_path);
 	ASSERT_STATUS(s, pmem::kv::status::OK);
-	s = cfg.put_size(83886080);
+	s = cfg.put_size(MEMKIND_PMEM_MIN_SIZE);
 	ASSERT_STATUS(s, pmem::kv::status::OK);
 
 	pmem::kv::db kv;
@@ -52,10 +52,10 @@ static void FailsToCreateInstanceWithTooSmallSize(std::string engine, std::strin
 	}
 }
 
-static void NoSizeInConfig(std::string engine)
+static void NoSizeInConfig(std::string engine, std::string path)
 {
 	pmem::kv::config cfg;
-	auto s = cfg.put_path("some_path");
+	auto s = cfg.put_path(path);
 	ASSERT_STATUS(s, pmem::kv::status::OK);
 
 	pmem::kv::db kv;
@@ -67,7 +67,7 @@ static void NoSizeInConfig(std::string engine)
 static void NoPathInConfig(std::string engine)
 {
 	pmem::kv::config cfg;
-	auto s = cfg.put_size(83886080);
+	auto s = cfg.put_size(MEMKIND_PMEM_MIN_SIZE);
 	ASSERT_STATUS(s, pmem::kv::status::OK);
 
 	pmem::kv::db kv;
@@ -93,7 +93,7 @@ static void test(int argc, char *argv[])
 
 	FailsToOpenInstanceWithInvalidPath(argv[1], argv[2]);
 	FailsToCreateInstanceWithTooSmallSize(argv[1], argv[3]);
-	NoSizeInConfig(argv[1]);
+	NoSizeInConfig(argv[1], argv[3]);
 	NoPathInConfig(argv[1]);
 }
 

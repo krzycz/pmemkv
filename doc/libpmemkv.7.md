@@ -120,7 +120,7 @@ This engine requires the following config parameters (see **libpmemkv_config**(3
 	+ type: string
 * **size** --  Specifies size of the database [in bytes]
 	+ type: uint64_t
-	+ min value: 8388608 (8MB)
+	+ min value: 16777216 (16MB) (value MEMKIND_PMEM_MIN_SIZE is specified in memkind.h)
 
 ## vsmap
 
@@ -135,7 +135,7 @@ This engine requires the following config parameters (see **libpmemkv_config**(3
 	+ type: string
 * **size** --  Specifies size of the database [in bytes]
 	+ type: uint64_t
-	+ min value: 8388608 (8MB)
+	+ min value: 16777216 (16MB) (value MEMKIND_PMEM_MIN_SIZE is specified in memkind.h)
 * **comparator** -- (optional) Specified comparator used by the engine
 	+ type: object
 
