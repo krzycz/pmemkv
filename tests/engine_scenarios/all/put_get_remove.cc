@@ -66,7 +66,7 @@ static void GetMultipleTest(pmem::kv::db &kv)
 		      status::OK);
 	std::size_t cnt = std::numeric_limits<std::size_t>::max();
 	ASSERT_STATUS(kv.count_all(cnt), status::OK);
-	UT_ASSERT(cnt == 5);
+	UT_ASSERTeq(cnt, 5);
 	ASSERT_STATUS(kv.exists(entry_from_string("abc")), status::OK);
 	std::string value1;
 	ASSERT_STATUS(kv.get(entry_from_string("abc"), &value1), status::OK);
@@ -235,7 +235,7 @@ static void RemoveExistingTest(pmem::kv::db &kv)
 	ASSERT_STATUS(kv.remove(entry_from_string("tmpkey1")), status::OK);
 	cnt = std::numeric_limits<std::size_t>::max();
 	ASSERT_STATUS(kv.count_all(cnt), status::OK);
-	UT_ASSERT(cnt == 1);
+	UT_ASSERTeq(cnt, 1);
 	ASSERT_STATUS(kv.remove(entry_from_string("tmpkey1")), status::NOT_FOUND);
 	cnt = std::numeric_limits<std::size_t>::max();
 	ASSERT_STATUS(kv.count_all(cnt), status::OK);

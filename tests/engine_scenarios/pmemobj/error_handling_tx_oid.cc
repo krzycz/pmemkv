@@ -36,9 +36,11 @@ static void test(int argc, char *argv[])
 
 	ASSERT_STATUS(s, status::OK);
 
-	auto kv = INITIALIZE_KV(engine, std::move(cfg));
+	{
+		auto kv = INITIALIZE_KV(engine, std::move(cfg));
 
-	TransactionTest(pmemobj_pool, kv);
+		TransactionTest(pmemobj_pool, kv);
+	}
 
 	pmemobj_pool.close();
 }

@@ -89,6 +89,13 @@ No additional packages are required.
 A persistent, sorted (without custom comparator support) engine, backed by a radix tree.
 It is disabled by default. It can be enabled in CMake using the `ENGINE_RADIX` option.
 
+It is possible to enable DRAM caching layer for radix engine (for details, see Configuration section).
+Enabling DRAM caching can improve write latency as new elements are appended to a pmem-resident log
+and inserted to a DRAM index instead of modifying radix tree in-place. Elements from pmem-resident log
+are transferred to a radix tree by a background thread.
+
+DRAM index is implemented as an LRU cache with maximum size set by the user.
+
 ### Configuration
 
 * **path** -- Path to the database pool (layout "pmemkv_radix"), to open or create.
@@ -105,6 +112,16 @@ It is disabled by default. It can be enabled in CMake using the `ENGINE_RADIX` o
 	+ default value: 0
 * **size** --  Only needed if any of the above flags is 1. It specifies size of the database [in bytes] to create.
 	+ type: uint64_t
+* **dram_caching** - If 1, enables DRAM caching layer on top of radix tree. If enabled, **cache_size** and
+	**log_size** parameters must be set.
+	+ type: uint64_t
+	+ default value: 0
+* **cache_size** - Only needed if **dram_caching** is set. Specifies maximum number of elements which can be held in DRAM index.
+	+ type: uint64_t
+	+ default value: 1000000
+* **log_size** - Only needed if **dram_caching** is set. Specifies size of PMEM-resident log in bytes.
+	+ type: uint64_t
+	+ default value: 64000000
 
 	For more detailed configuration's description see [cmap section in libpmemkv(7)](libpmemkv.7.md#cmap).
 

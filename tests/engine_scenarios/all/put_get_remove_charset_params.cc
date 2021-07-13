@@ -142,6 +142,7 @@ static void BinaryRandKeyTest(const size_t elements_cnt, const size_t max_key_le
 		UT_ASSERT(value == istr);
 
 		ASSERT_STATUS(kv.remove(key), status::OK);
+		ASSERT_STATUS(kv.exists(key), status::NOT_FOUND);
 	}
 	ASSERT_STATUS(kv.count_all(cnt), status::OK);
 	UT_ASSERT(cnt == 0);
