@@ -70,18 +70,18 @@ The above-mentioned bindings are maintained in separate GitHub repositories, but
 `pmemkv` provides multiple storage engines that share common API, so every engine can be used with
 all language bindings and utilities. Engines are loaded by name at runtime.
 
-| Engine Name  | Description | Experimental | Concurrent | Sorted |
-| ------------ | ----------- | :-------------: | :-----------: | :-------: |
-| [blackhole](doc/libpmemkv.7.md#blackhole) | Accepts everything, returns nothing | No | Yes | No |
-| [cmap](doc/libpmemkv.7.md#cmap) | Concurrent hash map | No | Yes | No |
-| [vsmap](doc/libpmemkv.7.md#vsmap) | Volatile sorted hash map | No | No | Yes |
-| [vcmap](doc/libpmemkv.7.md#vcmap) | Volatile concurrent hash map | No | Yes | No |
-| [csmap](doc/ENGINES-experimental.md#csmap) | [Concurrent sorted map](https://pmem.io/libpmemobj-cpp/master/doxygen/classpmem_1_1obj_1_1experimental_1_1concurrent__map.html) | Yes | Yes | Yes |
-| [radix](doc/ENGINES-experimental.md#radix) | [Radix tree](https://pmem.io/libpmemobj-cpp/master/doxygen/classpmem_1_1obj_1_1experimental_1_1radix__tree.html) | Yes | No | Yes |
-| [tree3](doc/ENGINES-experimental.md#tree3) | Persistent B+ tree | Yes | No | No |
-| [stree](doc/ENGINES-experimental.md#stree) | Sorted persistent B+ tree | Yes | No | Yes |
-| [robinhood](doc/ENGINES-experimental.md#robinhood) | Persistent hash map with Robin Hood hashing | Yes | Yes | No |
-| [dram_vcmap](doc/ENGINES-testing.md#dram_vcmap) | Volatile concurrent hash map placed entirely on DRAM | Yes | Yes | No |
+| Engine Name  | Description | Experimental | Concurrent | Sorted | Persistent |
+| ------------ | ----------- | :-------------: | :-----------: | :-------: | :-------: |
+| [blackhole](doc/libpmemkv.7.md#blackhole) | Accepts everything, returns nothing | No | Yes | No | No |
+| [cmap](doc/libpmemkv.7.md#cmap) | Concurrent hash map | No | Yes | No | Yes |
+| [vsmap](doc/libpmemkv.7.md#vsmap) | Volatile sorted hash map | No | No | Yes | No |
+| [vcmap](doc/libpmemkv.7.md#vcmap) | Volatile concurrent hash map | No | Yes | No | No |
+| [csmap](doc/ENGINES-experimental.md#csmap) | [Concurrent sorted map](https://pmem.io/libpmemobj-cpp/master/doxygen/classpmem_1_1obj_1_1experimental_1_1concurrent__map.html) | Yes | Yes | Yes | Yes |
+| [radix](doc/ENGINES-experimental.md#radix) | [Radix tree](https://pmem.io/libpmemobj-cpp/master/doxygen/classpmem_1_1obj_1_1experimental_1_1radix__tree.html) | Yes | No | Yes | Yes |
+| [tree3](doc/ENGINES-experimental.md#tree3) | Persistent B+ tree | Yes | No | No | Yes |
+| [stree](doc/ENGINES-experimental.md#stree) | Sorted persistent B+ tree | Yes | No | Yes | Yes |
+| [robinhood](doc/ENGINES-experimental.md#robinhood) | Persistent hash map with Robin Hood hashing | Yes | Yes | No | Yes |
+| [dram_vcmap](doc/ENGINES-testing.md#dram_vcmap) | Volatile concurrent hash map placed entirely on DRAM | Yes | Yes | No | No |
 
 The production quality engines are described in the [libpmemkv(7)](doc/libpmemkv.7.md#engines) manual
 and the experimental ones are described in the [ENGINES-experimental.md](doc/ENGINES-experimental.md) file.
