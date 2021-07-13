@@ -1,5 +1,8 @@
 
 name: pmemkv
+# It runs default OSes for each PR, push event or a new tag,
+# checks basic builds with various compilers and executes all sets of tests.
+
 on:
   push:
   pull_request:

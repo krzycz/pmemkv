@@ -24,13 +24,13 @@
 
 set -e
 
-source $(dirname $0)/set-ci-vars.sh
+source $(dirname ${0})/set-ci-vars.sh
 IMG_VER=${IMG_VER:-latest}
 TAG="${OS}-${OS_VER}-${IMG_VER}"
 IMAGES_DIR_NAME=images
 BASE_DIR=utils/docker/${IMAGES_DIR_NAME}
 
-if [[ -z "$OS" || -z "$OS_VER" ]]; then
+if [[ -z "${OS}" || -z "${OS_VER}" ]]; then
 	echo "ERROR: The variables OS and OS_VER have to be set properly " \
              "(eg. OS=fedora, OS_VER=32)."
 	exit 1

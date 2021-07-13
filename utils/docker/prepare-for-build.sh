@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # SPDX-License-Identifier: BSD-3-Clause
-# Copyright 2019-2020, Intel Corporation
+# Copyright 2019-2021, Intel Corporation
 
 #
 # prepare-for-build.sh - prepare the Docker image for the builds
@@ -12,14 +12,9 @@ set -e
 EXAMPLE_TEST_DIR="/tmp/build_example"
 PREFIX=/usr
 
-# CMake's version assigned to variable(s) (a single number representation for easier comparison)
-CMAKE_VERSION=$(cmake --version | head -n1 | grep -oE '[0-9].[0-9]*')
-CMAKE_VERSION_MAJOR=$(echo $CMAKE_VERSION | cut -d. -f1)
-CMAKE_VERSION_MINOR=$(echo $CMAKE_VERSION | cut -d. -f2)
-CMAKE_VERSION_NUMBER=$((100 * $CMAKE_VERSION_MAJOR + $CMAKE_VERSION_MINOR))
-
+### Helper functions, used in run-*.sh scripts
 function sudo_password() {
-	echo $USERPASS | sudo -Sk $*
+	echo ${USERPASS} | sudo -Sk $*
 }
 
 function upload_codecov() {
@@ -27,7 +22,7 @@ function upload_codecov() {
 
 	# set proper gcov command
 	clang_used=$(cmake -LA -N . | grep CMAKE_CXX_COMPILER | grep clang | wc -c)
-	if [[ $clang_used > 0 ]]; then
+	if [[ ${clang_used} -gt 0 ]]; then
 		gcovexe="llvm-cov gcov"
 	else
 		gcovexe="gcov"
@@ -35,13 +30,13 @@ function upload_codecov() {
 
 	# run gcov exe, using their bash (remove parsed coverage files, set flag and exit 1 if not successful)
 	# we rely on parsed report on codecov.io; the output is quite long, hence it's disabled using -X flag
-	/opt/scripts/codecov -c -F $1 -Z -x "$gcovexe" -X "gcovout"
+	/opt/scripts/codecov -c -F ${1} -Z -x "${gcovexe}" -X "gcovout"
 
 	printf "check for any leftover gcov files\n"
 	leftover_files=$(find . -name "*.gcov")
-	if [[ -n "$leftover_files" ]]; then
+	if [[ -n "${leftover_files}" ]]; then
 		# display found files and exit with error (they all should be parsed)
-		echo "$leftover_files"
+		echo "${leftover_files}"
 		return 1
 	fi
 
@@ -49,14 +44,14 @@ function upload_codecov() {
 }
 
 function compile_example_standalone() {
-	example_name=$1
+	example_name=${1}
 	echo "Compile standalone example: ${example_name}"
 
-	rm -rf $EXAMPLE_TEST_DIR
-	mkdir $EXAMPLE_TEST_DIR
-	cd $EXAMPLE_TEST_DIR
+	rm -rf ${EXAMPLE_TEST_DIR}
+	mkdir ${EXAMPLE_TEST_DIR}
+	cd ${EXAMPLE_TEST_DIR}
 
-	cmake $WORKDIR/examples/$example_name
+	cmake ${WORKDIR}/examples/${example_name}
 
 	# exit on error
 	if [[ $? != 0 ]]; then
@@ -69,13 +64,13 @@ function compile_example_standalone() {
 }
 
 function run_example_standalone() {
-	example_name=$1
-	pool_path=$2
+	example_name=${1}
+	pool_path=${2}
 	echo "Run standalone example: ${example_name} with path: ${pool_path}"
 
-	cd $EXAMPLE_TEST_DIR
+	cd ${EXAMPLE_TEST_DIR}
 
-	./$example_name $pool_path
+	./${example_name} ${pool_path}
 
 	# exit on error
 	if [[ $? != 0 ]]; then
@@ -83,7 +78,7 @@ function run_example_standalone() {
 		return 1
 	fi
 
-	rm -f $pool_path
+	rm -f ${pool_path}
 	cd -
 }
 
@@ -96,7 +91,23 @@ function workspace_cleanup() {
 	pmempool rm -f ${WORKDIR}/examples/example.poolset
 }
 
+### Additional checks, to be run, when this file is sourced
+if [[ -z "${WORKDIR}" ]]; then
+	echo "ERROR: The variable WORKDIR has to contain a path to the root " \
+		"of this project - 'build' sub-directory will be created there."
+	exit 1
+fi
+
 # this should be run only on CIs
-if [ "$CI_RUN" == "YES" ]; then
-	sudo_password chown -R $(id -u).$(id -g) $WORKDIR
+if [ "${CI_RUN}" == "YES" ]; then
+	sudo_password chown -R $(id -u).$(id -g) ${WORKDIR}
 fi || true
+
+echo "CMake version:"
+cmake --version
+
+# assign CMake's version to variable(s)  - a single number representation for easier comparison
+CMAKE_VERSION=$(cmake --version | head -n1 | grep -oE '[0-9]\.[0-9]*')
+CMAKE_VERSION_MAJOR=$(echo ${CMAKE_VERSION} | cut -d. -f1)
+CMAKE_VERSION_MINOR=$(echo ${CMAKE_VERSION} | cut -d. -f2)
+CMAKE_VERSION_NUMBER=$((100 * ${CMAKE_VERSION_MAJOR} + ${CMAKE_VERSION_MINOR}))

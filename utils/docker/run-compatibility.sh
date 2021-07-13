@@ -12,7 +12,7 @@ TEST_DIR=${PMEMKV_TEST_DIR:-${DEFAULT_TEST_DIR}}
 
 INSTALL_PREFIX=/opt
 
-source `dirname $0`/prepare-for-build.sh
+source `dirname ${0}`/prepare-for-build.sh
 
 function build_and_install_pmemkv() {
 	version=${1}
@@ -53,7 +53,7 @@ function verify_compatibility() {
 	make -j$(nproc)
 	cd ../..
 
-	PMEM_IS_PMEM_FORCE=1 ${WORKDIR}/tests/compatibility/cmap.sh ${WORKDIR}/build/pmemkv-HEAD/cmap_compatibility ${WORKDIR}/build/pmemkv-${version}/cmap_compatibility $TEST_DIR/testfile
+	PMEM_IS_PMEM_FORCE=1 ${WORKDIR}/tests/compatibility/cmap.sh ${WORKDIR}/build/pmemkv-HEAD/cmap_compatibility ${WORKDIR}/build/pmemkv-${version}/cmap_compatibility ${TEST_DIR}/testfile
 
 	workspace_cleanup
 }

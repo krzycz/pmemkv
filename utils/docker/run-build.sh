@@ -9,7 +9,7 @@
 
 set -e
 
-source `dirname $0`/prepare-for-build.sh
+source `dirname ${0}`/prepare-for-build.sh
 
 # params set for the file (if not previously set, the right-hand param is used)
 TEST_DIR=${PMEMKV_TEST_DIR:-${DEFAULT_TEST_DIR}}
@@ -31,9 +31,9 @@ function tests_gcc_debug_cpp11() {
 
 	CC=gcc CXX=g++ \
 	cmake .. -DCMAKE_BUILD_TYPE=Debug \
-		-DTEST_DIR=$TEST_DIR \
-		-DCMAKE_INSTALL_PREFIX=$PREFIX \
-		-DCOVERAGE=$COVERAGE \
+		-DTEST_DIR=${TEST_DIR} \
+		-DCMAKE_INSTALL_PREFIX=${PREFIX} \
+		-DCOVERAGE=${COVERAGE} \
 		-DBUILD_JSON_CONFIG=${BUILD_JSON_CONFIG} \
 		-DCHECK_CPP_STYLE=${CHECK_CPP_STYLE} \
 		-DTESTS_LONG=${TESTS_LONG} \
@@ -47,7 +47,7 @@ function tests_gcc_debug_cpp11() {
 	make -j$(nproc)
 	ctest -E "_memcheck|_drd|_helgrind|_pmemcheck|_pmreorder" --timeout ${TEST_TIMEOUT} --output-on-failure
 
-	if [ "$COVERAGE" == "1" ]; then
+	if [ "${COVERAGE}" == "1" ]; then
 		upload_codecov gcc_debug_cpp11
 	fi
 
@@ -65,9 +65,9 @@ function tests_gcc_debug_cpp14() {
 
 	CC=gcc CXX=g++ \
 	cmake .. -DCMAKE_BUILD_TYPE=Debug \
-		-DTEST_DIR=$TEST_DIR \
-		-DCMAKE_INSTALL_PREFIX=$PREFIX \
-		-DCOVERAGE=$COVERAGE \
+		-DTEST_DIR=${TEST_DIR} \
+		-DCMAKE_INSTALL_PREFIX=${PREFIX} \
+		-DCOVERAGE=${COVERAGE} \
 		-DENGINE_CSMAP=1 \
 		-DENGINE_RADIX=1 \
 		-DENGINE_ROBINHOOD=1 \
@@ -84,7 +84,7 @@ function tests_gcc_debug_cpp14() {
 	make -j$(nproc)
 	ctest -E "_memcheck|_drd|_helgrind|_pmemcheck|_pmreorder" --timeout ${TEST_TIMEOUT} --output-on-failure
 
-	if [ "$COVERAGE" == "1" ]; then
+	if [ "${COVERAGE}" == "1" ]; then
 		upload_codecov gcc_debug_cpp14
 	fi
 
@@ -102,9 +102,9 @@ function tests_gcc_debug_cpp14_valgrind_other() {
 
 	CC=gcc CXX=g++ \
 	cmake .. -DCMAKE_BUILD_TYPE=Debug \
-		-DTEST_DIR=$TEST_DIR \
-		-DCMAKE_INSTALL_PREFIX=$PREFIX \
-		-DCOVERAGE=$COVERAGE \
+		-DTEST_DIR=${TEST_DIR} \
+		-DCMAKE_INSTALL_PREFIX=${PREFIX} \
+		-DCOVERAGE=${COVERAGE} \
 		-DENGINE_CSMAP=1 \
 		-DENGINE_RADIX=1 \
 		-DENGINE_ROBINHOOD=1 \
@@ -116,7 +116,7 @@ function tests_gcc_debug_cpp14_valgrind_other() {
 	make -j$(nproc)
 	ctest -R "_helgrind|_pmemcheck|_pmreorder" --timeout ${TEST_TIMEOUT} --output-on-failure
 
-	if [ "$COVERAGE" == "1" ]; then
+	if [ "${COVERAGE}" == "1" ]; then
 		upload_codecov gcc_debug_cpp14_valgrind_other
 	fi
 
@@ -134,9 +134,9 @@ function tests_gcc_debug_cpp14_valgrind_memcheck_drd() {
 
 	CC=gcc CXX=g++ \
 	cmake .. -DCMAKE_BUILD_TYPE=Debug \
-		-DTEST_DIR=$TEST_DIR \
-		-DCMAKE_INSTALL_PREFIX=$PREFIX \
-		-DCOVERAGE=$COVERAGE \
+		-DTEST_DIR=${TEST_DIR} \
+		-DCMAKE_INSTALL_PREFIX=${PREFIX} \
+		-DCOVERAGE=${COVERAGE} \
 		-DENGINE_CSMAP=1 \
 		-DENGINE_RADIX=1 \
 		-DENGINE_ROBINHOOD=1 \
@@ -150,7 +150,7 @@ function tests_gcc_debug_cpp14_valgrind_memcheck_drd() {
 	make -j$(nproc)
 	ctest -R "_memcheck|_drd" --timeout ${TEST_TIMEOUT} --output-on-failure
 
-	if [ "$COVERAGE" == "1" ]; then
+	if [ "${COVERAGE}" == "1" ]; then
 		upload_codecov gcc_debug_cpp14_valgrind_memcheck_drd
 	fi
 
@@ -165,7 +165,7 @@ function tests_clang_release_cpp20() {
 	printf "\n$(tput setaf 1)$(tput setab 7)BUILD ${FUNCNAME[0]} START$(tput sgr 0)\n"
 
 	# CXX_STANDARD==20 is supported since CMake 3.12
-	if [ $CMAKE_VERSION_NUMBER -lt 312 ]; then
+	if [ ${CMAKE_VERSION_NUMBER} -lt 312 ]; then
 		echo "ERROR: C++20 is supported in CMake since 3.12, installed version: ${CMAKE_VERSION}"
 		exit 1
 	fi
@@ -174,9 +174,9 @@ function tests_clang_release_cpp20() {
 	cd build
 
 	CC=clang CXX=clang++ cmake .. -DCMAKE_BUILD_TYPE=Release \
-		-DTEST_DIR=$TEST_DIR \
-		-DCMAKE_INSTALL_PREFIX=$PREFIX \
-		-DCOVERAGE=$COVERAGE \
+		-DTEST_DIR=${TEST_DIR} \
+		-DCMAKE_INSTALL_PREFIX=${PREFIX} \
+		-DCOVERAGE=${COVERAGE} \
 		-DENGINE_RADIX=1 \
 		-DENGINE_ROBINHOOD=1 \
 		-DENGINE_DRAM_VCMAP=1 \
@@ -192,7 +192,7 @@ function tests_clang_release_cpp20() {
 	make -j$(nproc)
 	ctest -E "_memcheck|_drd|_helgrind|_pmemcheck|_pmreorder" --timeout ${TEST_TIMEOUT} --output-on-failure
 
-	if [ "$COVERAGE" == "1" ]; then
+	if [ "${COVERAGE}" == "1" ]; then
 		upload_codecov clang_release_cpp20
 	fi
 
@@ -212,7 +212,7 @@ function test_release_installation() {
 	cmake .. -DCMAKE_BUILD_TYPE=Release \
 		-DENGINE_RADIX=1 \
 		-DBUILD_TESTS=0 \
-		-DCMAKE_INSTALL_PREFIX=$PREFIX \
+		-DCMAKE_INSTALL_PREFIX=${PREFIX} \
 		-DBUILD_JSON_CONFIG=${BUILD_JSON_CONFIG}
 
 	make -j$(nproc)
@@ -223,7 +223,7 @@ function test_release_installation() {
 	run_example_standalone pmemkv_basic_c pool
 	compile_example_standalone pmemkv_basic_cpp
 	run_example_standalone pmemkv_basic_cpp pool
-	if [ "$BUILD_JSON_CONFIG" == "ON" ]; then
+	if [ "${BUILD_JSON_CONFIG}" == "ON" ]; then
 		compile_example_standalone pmemkv_config_c
 		run_example_standalone pmemkv_config_c pool
 	fi
@@ -232,25 +232,25 @@ function test_release_installation() {
 
 	echo "Poolset example:"
 	compile_example_standalone pmemkv_open_cpp
-	pmempool create -l "pmemkv" obj $WORKDIR/examples/example.poolset
-	run_example_standalone pmemkv_open_cpp $WORKDIR/examples/example.poolset
+	pmempool create -l "pmemkv" obj ${WORKDIR}/examples/example.poolset
+	run_example_standalone pmemkv_open_cpp ${WORKDIR}/examples/example.poolset
 
 	echo "Expect failure - non-existing path is passed:"
 	run_example_standalone pmemkv_open_cpp /non-existing/path && exit 1
 
 	echo "Transaction C++ example:"
 	compile_example_standalone pmemkv_transaction_cpp
-	pmempool create -l "pmemkv_radix" obj $WORKDIR/examples/example.poolset
-	run_example_standalone pmemkv_transaction_cpp $WORKDIR/examples/example.poolset
+	pmempool create -l "pmemkv_radix" obj ${WORKDIR}/examples/example.poolset
+	run_example_standalone pmemkv_transaction_cpp ${WORKDIR}/examples/example.poolset
 
 	echo "Transaction C example:"
 	compile_example_standalone pmemkv_transaction_c
-	pmempool rm -f $WORKDIR/examples/example.poolset
-	pmempool create -l "pmemkv_radix" obj $WORKDIR/examples/example.poolset
-	run_example_standalone pmemkv_transaction_c $WORKDIR/examples/example.poolset
+	pmempool rm -f ${WORKDIR}/examples/example.poolset
+	pmempool create -l "pmemkv_radix" obj ${WORKDIR}/examples/example.poolset
+	run_example_standalone pmemkv_transaction_c ${WORKDIR}/examples/example.poolset
 
 	echo "Uninstall libraries"
-	cd $WORKDIR/build
+	cd ${WORKDIR}/build
 	sudo_password -S make uninstall
 
 	workspace_cleanup
@@ -258,7 +258,7 @@ function test_release_installation() {
 }
 
 # Main:
-cd $WORKDIR
+cd ${WORKDIR}
 
 echo "### Cleaning workspace"
 workspace_cleanup
@@ -273,12 +273,12 @@ echo "Run build steps passed as script arguments:"
 build_steps=$@
 echo "Defined build steps: ${build_steps}"
 
-if [[ -z "$build_steps" ]]; then
+if [[ -z "${build_steps}" ]]; then
 	echo "ERROR: The variable build_steps with selected builds to run is not set!"
 	exit 1
 fi
 
-for build in $build_steps
+for build in ${build_steps}
 do
-	$build
+	${build}
 done

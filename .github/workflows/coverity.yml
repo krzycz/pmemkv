@@ -1,5 +1,7 @@
 
 name: pmemkv-coverity
+# It runs static analysis build - Coverity. It requires special token (set in CI's secret).
+
 on:
   schedule:
     # run this job at 00:00 UTC everyday
