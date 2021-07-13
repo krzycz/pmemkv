@@ -24,7 +24,7 @@ secondary_title: pmemkv
 
 **pmemkv_iterator** - Iterator API for libpmemkv
 
-This API is EXPERIMENTAL and might change.
+This API is **EXPERIMENTAL** and might change.
 
 # SYNOPSIS #
 
@@ -53,9 +53,9 @@ int pmemkv_iterator_prev(pmemkv_iterator *it);
 int pmemkv_iterator_key(pmemkv_iterator *it, const char **k, size_t *kb);
 
 int pmemkv_iterator_read_range(pmemkv_iterator *it, size_t pos, size_t n,
-			       const char **data, size_t *rb);
+					const char **data, size_t *rb);
 int pmemkv_write_iterator_write_range(pmemkv_write_iterator *it, size_t pos, size_t n,
-				      char **data, size_t *wb);
+					char **data, size_t *wb);
 
 int pmemkv_write_iterator_commit(pmemkv_write_iterator *it);
 void pmemkv_write_iterator_abort(pmemkv_write_iterator *it);
@@ -73,10 +73,10 @@ key and value. To use pmemkv_write_iterator as a pmemkv_iterator you need to get
 
 Example of calling pmemkv_iterator_seek_to_first() with both iterator types.
 ```c
-// read_it is already created pmemkv_iterator
+/* read_it is already created, by pmemkv_iterator */
 int status = pmemkv_iterator_seek_to_first(read_it);
 
-// write_it is already created pmemkv_write_iterator
+/* write_it is already created, by pmemkv_write_iterator */
 int status = pmemkv_iterator_seek_to_first(write_it->iter);
 ```
 
@@ -88,18 +88,23 @@ If an engine does not support a certain function, it will return PMEMKV\_STATUS\
 Holding simultaneously in the same thread more than one iterator is undefined behavior.
 
 `int pmemkv_iterator_new(pmemkv_db *db, pmemkv_iterator **it);`
+
 :	Creates a new pmemkv_iterator instance and stores a pointer to it in `*it`.
 
 `int pmemkv_write_iterator_new(pmemkv_db *db, pmemkv_write_iterator **it);`
+
 :	Creates a new pmemkv_write_iterator instance and stores a pointer to it in `*it`.
 
 `void pmemkv_iterator_delete(pmemkv_iterator *it);`
+
 :	Deletes pmemkv_iterator.
 
 `void pmemkv_write_iterator_delete(pmemkv_write_iterator *it);`
+
 :	Deletes pmemkv_write_iterator
 
 `int pmemkv_iterator_seek(pmemkv_iterator *it, const char *k, size_t kb);`
+
 :	Changes iterator position to the record with given key `k` of length `kb`.
 	If the record is present and no errors occurred, returns PMEMKV_STATUS_OK.
 	If the record does not exist, PMEMKV_STATUS_NOT_FOUND is returned and the iterator
@@ -107,6 +112,7 @@ Holding simultaneously in the same thread more than one iterator is undefined be
 	It internally aborts all changes made to an element previously pointed by the iterator.
 
 `int pmemkv_iterator_seek_lower(pmemkv_iterator *it, const char *k, size_t kb);`
+
 :	Changes iterator position to the record with key lower than given key `k` of length `kb`.
 	If the record is present and no errors occurred, returns PMEMKV_STATUS_OK.
 	If the record does not exist, PMEMKV_STATUS_NOT_FOUND is returned and the iterator
@@ -114,6 +120,7 @@ Holding simultaneously in the same thread more than one iterator is undefined be
 	It internally aborts all changes made to an element previously pointed by the iterator.
 
 `int pmemkv_iterator_seek_lower_eq(pmemkv_iterator *it, const char *k, size_t kb);`
+
 :	Changes iterator position to the record with key equal or lower than given key `k` of length `kb`.
 	If the record is present and no errors occurred, returns PMEMKV_STATUS_OK.
 	If the record does not exist, PMEMKV_STATUS_NOT_FOUND is returned and the iterator
@@ -121,6 +128,7 @@ Holding simultaneously in the same thread more than one iterator is undefined be
 	It internally aborts all changes made to an element previously pointed by the iterator.
 
 `int pmemkv_iterator_seek_higher(pmemkv_iterator *it, const char *k, size_t kb);`
+
 :	Changes iterator position to the record with key higher than given key `k` of length `kb`.
 	If the record is present and no errors occurred, returns PMEMKV_STATUS_OK.
 	If the record does not exist, PMEMKV_STATUS_NOT_FOUND is returned and the iterator
@@ -128,6 +136,7 @@ Holding simultaneously in the same thread more than one iterator is undefined be
 	It internally aborts all changes made to an element previously pointed by the iterator.
 
 `int pmemkv_iterator_seek_higher_eq(pmemkv_iterator *it, const char *k, size_t kb);`
+
 :	Changes iterator position to the record with key equal or higher than given key `k` of length `kb`.
 	If the record is present and no errors occurred, returns PMEMKV_STATUS_OK.
 	If the record does not exist, PMEMKV_STATUS_NOT_FOUND is returned and the iterator
@@ -135,37 +144,44 @@ Holding simultaneously in the same thread more than one iterator is undefined be
 	It internally aborts all changes made to an element previously pointed by the iterator.
 
 `int pmemkv_iterator_seek_to_first(pmemkv_iterator *it);`
+
 :	Changes iterator position to the first record. If db isn't empty, and no errors occurred, returns
 	PMEMKV_STATUS_OK. If db is empty, PMEMKV_STATUS_NOT_FOUND is returned and the iterator position is undefined.
 	It internally aborts all changes made to an element previously pointed by the iterator.
 
 `int pmemkv_iterator_seek_to_last(pmemkv_iterator *it);`
+
 :	Changes iterator position to the last record. If db isn't empty, and no errors occurred, returns
 	PMEMKV_STATUS_OK. If db is empty, PMEMKV_STATUS_NOT_FOUND is returned and the iterator position is undefined.
 	It internally aborts all changes made to an element previously pointed by the iterator.
 
 `int pmemkv_iterator_is_next(pmemkv_iterator *it);`
+
 :	Checks if there is a next record available. If true is returned, it is guaranteed that
 	pmemkv_iterator_next(it) will return PMEMKV_STATUS_OK, otherwise iterator is already on the last
 	element and pmemkv_iterator_next(it) will return PMEMKV_STATUS_NOT_FOUND.
 
 `int pmemkv_iterator_next(pmemkv_iterator *it);`
+
 :	Changes iterator position to the next record.
 	If the next record exists, returns PMEMKV_STATUS_OK, otherwise
 	PMEMKV_STATUS_NOT_FOUND is returned and the iterator position is undefined.
 	It internally aborts all changes made to an element previously pointed by the iterator.
 
 `int pmemkv_iterator_prev(pmemkv_iterator *it);`
+
 :	Changes iterator position to the previous record.
 	If the previous record exists, returns PMEMKV_STATUS_OK, otherwise
 	PMEMKV_STATUS_NOT_FOUND is returned and the iterator position is undefined.
 	It internally aborts all changes made to an element previously pointed by the iterator.
 
 `int pmemkv_iterator_key(pmemkv_iterator *it, const char **k, size_t *kb);`
+
 :	Assigns record's key's address to `k` and key's length to `kb`. If the iterator is on an undefined position,
 	calling this method is undefined behaviour.
 
 `int pmemkv_iterator_read_range(pmemkv_iterator *it, size_t pos, size_t n, const char **data, size_t *rb);`
+
 :	Allows getting record's value's range which can be only read.
 	You can request for either full value or only value's subrange (`n` elements starting from `pos`).
 	Assigns pointer to the beginning of the requested range to `data`, and number of elements in range to `rb`.
@@ -173,6 +189,7 @@ Holding simultaneously in the same thread more than one iterator is undefined be
 	If the iterator is on an undefined position, calling this method is undefined behaviour.
 
 `int pmemkv_write_iterator_write_range(pmemkv_write_iterator *it, size_t pos, size_t n, char **data, size_t *wb);`
+
 :	Allows getting record's value's range which can be modified.
 	You can request for either full value or only value's subrange (`n` elements starting from `pos`).
 	Assigns pointer to the beginning of the requested range to `data`, and number of elements in range to `wb`.
@@ -181,12 +198,14 @@ Holding simultaneously in the same thread more than one iterator is undefined be
 	If the iterator is on an undefined position, calling this method is undefined behaviour.
 
 `int pmemkv_write_iterator_commit(pmemkv_write_iterator *it);`
+
 :	Commits modifications made on the current record.
 	Calling this method is the only way to save modifications made by the iterator on the current
 	record. You need to call this method before changing the iterator position, otherwise
 	modifications will be automatically aborted.
 
 `void pmemkv_write_iterator_abort(pmemkv_write_iterator *it);`
+
 :	Aborts uncommitted modifications made on the current record.
 
 ## ERRORS ##

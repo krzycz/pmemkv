@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">PMEMKV
-   &#160;<span id="projectnumber">1.4-git76.ge57429f</span>
+   &#160;<span id="projectnumber">1.4-git148.g4b78a10</span>
    </div>
    <div id="projectbrief">This is the C++ documentation for PMEMKV.</div>
   </td>
@@ -245,42 +245,41 @@ Private Attributes</h2></td></tr>
 <div class="line">    <span class="comment">/* s = cfg.put_create_or_error_if_exists(true); */</span></div>
 <div class="line"> </div>
 <div class="line">    LOG(<span class="stringliteral">&quot;Opening pmemkv database with &#39;cmap&#39; engine&quot;</span>);</div>
-<div class="line">    <a class="code" href="classpmem_1_1kv_1_1db.html">db</a> *kv = <span class="keyword">new</span> <a class="code" href="classpmem_1_1kv_1_1db.html#a56a026a82b2836e68fe4d62a011fd9a5">db</a>();</div>
-<div class="line">    ASSERT(kv != <span class="keyword">nullptr</span>);</div>
-<div class="line">    s = kv-&gt;<a class="code" href="classpmem_1_1kv_1_1db.html#a2926a0a75fa9f1f36797bddbbe16e98e">open</a>(<span class="stringliteral">&quot;cmap&quot;</span>, std::move(cfg));</div>
+<div class="line">    <a class="code" href="classpmem_1_1kv_1_1db.html">db</a> kv;</div>
+<div class="line">    s = kv.<a class="code" href="classpmem_1_1kv_1_1db.html#a2926a0a75fa9f1f36797bddbbe16e98e">open</a>(<span class="stringliteral">&quot;cmap&quot;</span>, std::move(cfg));</div>
 <div class="line">    ASSERT(s == status::OK);</div>
 <div class="line"> </div>
 <div class="line">    LOG(<span class="stringliteral">&quot;Putting new key&quot;</span>);</div>
-<div class="line">    s = kv-&gt;<a class="code" href="classpmem_1_1kv_1_1db.html#a31dbecf3c960dec47d4a04328b9efd92">put</a>(<span class="stringliteral">&quot;key1&quot;</span>, <span class="stringliteral">&quot;value1&quot;</span>);</div>
+<div class="line">    s = kv.<a class="code" href="classpmem_1_1kv_1_1db.html#a31dbecf3c960dec47d4a04328b9efd92">put</a>(<span class="stringliteral">&quot;key1&quot;</span>, <span class="stringliteral">&quot;value1&quot;</span>);</div>
 <div class="line">    ASSERT(s == status::OK);</div>
 <div class="line"> </div>
 <div class="line">    <span class="keywordtype">size_t</span> cnt;</div>
-<div class="line">    s = kv-&gt;<a class="code" href="classpmem_1_1kv_1_1db.html#a045d8e25af7fcbeae241a86009bcb950">count_all</a>(cnt);</div>
+<div class="line">    s = kv.<a class="code" href="classpmem_1_1kv_1_1db.html#a045d8e25af7fcbeae241a86009bcb950">count_all</a>(cnt);</div>
 <div class="line">    ASSERT(s == status::OK &amp;&amp; cnt == 1);</div>
 <div class="line"> </div>
 <div class="line">    LOG(<span class="stringliteral">&quot;Reading key back&quot;</span>);</div>
 <div class="line">    std::string value;</div>
-<div class="line">    s = kv-&gt;<a class="code" href="classpmem_1_1kv_1_1db.html#aff3cbefb1fa8e9bd611cc3a6a5137fa7">get</a>(<span class="stringliteral">&quot;key1&quot;</span>, &amp;value);</div>
+<div class="line">    s = kv.<a class="code" href="classpmem_1_1kv_1_1db.html#aff3cbefb1fa8e9bd611cc3a6a5137fa7">get</a>(<span class="stringliteral">&quot;key1&quot;</span>, &amp;value);</div>
 <div class="line">    ASSERT(s == status::OK &amp;&amp; value == <span class="stringliteral">&quot;value1&quot;</span>);</div>
 <div class="line"> </div>
 <div class="line">    LOG(<span class="stringliteral">&quot;Iterating existing keys&quot;</span>);</div>
-<div class="line">    s = kv-&gt;<a class="code" href="classpmem_1_1kv_1_1db.html#a31dbecf3c960dec47d4a04328b9efd92">put</a>(<span class="stringliteral">&quot;key2&quot;</span>, <span class="stringliteral">&quot;value2&quot;</span>);</div>
+<div class="line">    s = kv.<a class="code" href="classpmem_1_1kv_1_1db.html#a31dbecf3c960dec47d4a04328b9efd92">put</a>(<span class="stringliteral">&quot;key2&quot;</span>, <span class="stringliteral">&quot;value2&quot;</span>);</div>
 <div class="line">    ASSERT(s == status::OK);</div>
-<div class="line">    s = kv-&gt;<a class="code" href="classpmem_1_1kv_1_1db.html#a31dbecf3c960dec47d4a04328b9efd92">put</a>(<span class="stringliteral">&quot;key3&quot;</span>, <span class="stringliteral">&quot;value3&quot;</span>);</div>
+<div class="line">    s = kv.<a class="code" href="classpmem_1_1kv_1_1db.html#a31dbecf3c960dec47d4a04328b9efd92">put</a>(<span class="stringliteral">&quot;key3&quot;</span>, <span class="stringliteral">&quot;value3&quot;</span>);</div>
 <div class="line">    ASSERT(s == status::OK);</div>
-<div class="line">    kv-&gt;<a class="code" href="classpmem_1_1kv_1_1db.html#a70aedc11acdeceb27297e68e9f366b8b">get_all</a>([](<a class="code" href="namespacepmem_1_1kv.html#aa8cc4736e5bca1f316a2c9a79ff1150b">string_view</a> k, <a class="code" href="namespacepmem_1_1kv.html#aa8cc4736e5bca1f316a2c9a79ff1150b">string_view</a> v) {</div>
+<div class="line">    kv.<a class="code" href="classpmem_1_1kv_1_1db.html#a70aedc11acdeceb27297e68e9f366b8b">get_all</a>([](<a class="code" href="namespacepmem_1_1kv.html#aa8cc4736e5bca1f316a2c9a79ff1150b">string_view</a> k, <a class="code" href="namespacepmem_1_1kv.html#aa8cc4736e5bca1f316a2c9a79ff1150b">string_view</a> v) {</div>
 <div class="line">        LOG(<span class="stringliteral">&quot;  visited: &quot;</span> &lt;&lt; k.data());</div>
 <div class="line">        <span class="keywordflow">return</span> 0;</div>
 <div class="line">    });</div>
 <div class="line"> </div>
 <div class="line">    LOG(<span class="stringliteral">&quot;Defragmenting the database&quot;</span>);</div>
-<div class="line">    s = kv-&gt;<a class="code" href="classpmem_1_1kv_1_1db.html#a247061eab0155ce92b24885be6afd207">defrag</a>(0, 100);</div>
+<div class="line">    s = kv.<a class="code" href="classpmem_1_1kv_1_1db.html#a247061eab0155ce92b24885be6afd207">defrag</a>(0, 100);</div>
 <div class="line">    ASSERT(s == status::OK);</div>
 <div class="line"> </div>
 <div class="line">    LOG(<span class="stringliteral">&quot;Removing existing key&quot;</span>);</div>
-<div class="line">    s = kv-&gt;<a class="code" href="classpmem_1_1kv_1_1db.html#a31167b93a66c88559ff11010e1e130c1">remove</a>(<span class="stringliteral">&quot;key1&quot;</span>);</div>
+<div class="line">    s = kv.<a class="code" href="classpmem_1_1kv_1_1db.html#a31167b93a66c88559ff11010e1e130c1">remove</a>(<span class="stringliteral">&quot;key1&quot;</span>);</div>
 <div class="line">    ASSERT(s == status::OK);</div>
-<div class="line">    s = kv-&gt;<a class="code" href="classpmem_1_1kv_1_1db.html#a130ec5171d0afa3d8fe9b5604910c679">exists</a>(<span class="stringliteral">&quot;key1&quot;</span>);</div>
+<div class="line">    s = kv.<a class="code" href="classpmem_1_1kv_1_1db.html#a130ec5171d0afa3d8fe9b5604910c679">exists</a>(<span class="stringliteral">&quot;key1&quot;</span>);</div>
 <div class="line">    ASSERT(s == status::NOT_FOUND);</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">/* Examples of using pmem:kv:status with std::ostream and operator&lt;&lt;,</span></div>
@@ -294,7 +293,6 @@ Private Attributes</h2></td></tr>
 <div class="line">    assert(oss.str() == <span class="stringliteral">&quot;NOT_FOUND (2)&quot;</span>);</div>
 <div class="line"> </div>
 <div class="line">    LOG(<span class="stringliteral">&quot;Closing database&quot;</span>);</div>
-<div class="line">    <span class="keyword">delete</span> kv;</div>
 <div class="line"> </div>
 <div class="line">    <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
@@ -1953,7 +1951,7 @@ Private Attributes</h2></td></tr>
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>/tmp/pmemkv-CTO/src/<a class="el" href="libpmemkv_8hpp_source.html">libpmemkv.hpp</a></li>
+<li>/tmp/pmemkv-myD/src/<a class="el" href="libpmemkv_8hpp_source.html">libpmemkv.hpp</a></li>
 </ul>
 </div><!-- contents -->
 <div class="ttc" id="aclasspmem_1_1kv_1_1db_html_a56a026a82b2836e68fe4d62a011fd9a5"><div class="ttname"><a href="classpmem_1_1kv_1_1db.html#a56a026a82b2836e68fe4d62a011fd9a5">pmem::kv::db::db</a></div><div class="ttdeci">db() noexcept</div><div class="ttdoc">Default constructor with uninitialized database.</div><div class="ttdef"><b>Definition:</b> libpmemkv.hpp:1775</div></div>

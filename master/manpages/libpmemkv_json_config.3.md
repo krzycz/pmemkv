@@ -8,7 +8,7 @@ secondary_title: pmemkv_json_config
 ...
 
 [comment]: <> (SPDX-License-Identifier: BSD-3-Clause)
-[comment]: <> (Copyright 2019-2020, Intel Corporation)
+[comment]: <> (Copyright 2019-2021, Intel Corporation)
 
 [comment]: <> (libpmemkv_json_config.3 -- man page for libpmemkv_json_config configuration API)
 
@@ -54,7 +54,7 @@ pmemkv_json_config is a helper library that provides two functions:
 
 :	Returns a human readable string describing the last error.
 
-The 'pmemkv_config_from_json' function depends on RapidJSON library
+The `pmemkv_config_from_json` function depends on RapidJSON library
 what is the direct cause of the creation of this small library.
 
 The building of this library is enabled by default.
@@ -66,7 +66,7 @@ cmake .. -DBUILD_JSON_CONFIG=OFF
 
 ## ERRORS ##
 
-The *pmemkv_config_from_json()* function returns status. Possible return values are:
+The `pmemkv_config_from_json()` function returns status. Possible return values are:
 
 + **PMEMKV_STATUS_OK** -- no error
 + **PMEMKV_STATUS_UNKNOWN_ERROR** -- unknown error
@@ -74,7 +74,7 @@ The *pmemkv_config_from_json()* function returns status. Possible return values 
 
 # EXAMPLE #
 
-An example can be found in **libpmemkv_config**(3).
+An example using this API can be found in **libpmemkv_config**(3).
 
 # SEE ALSO #
 
